@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INDLENDD // VOID</title>
+    <title>INDLENDD // SYSTEM</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
-
         * { box-sizing: border-box; cursor: crosshair; }
 
         body {
@@ -14,105 +13,62 @@
             color: #fff;
             font-family: 'Courier Prime', monospace;
             margin: 0;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
         }
 
-        /* Эффект стекающей белой крови */
+        /* Кровь */
         #drops-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1;
         }
-
         .drop {
-            position: absolute;
-            width: 2px;
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.8));
-            border-radius: 0 0 5px 5px;
+            position: absolute; width: 1px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), #fff);
             animation: fall linear infinite;
         }
+        @keyframes fall { 0% { transform: translateY(-100px); } 100% { transform: translateY(100vh); } }
 
-        @keyframes fall {
-            0% { transform: translateY(-100px); }
-            100% { transform: translateY(100vh); }
+        /* Интро */
+        #intro {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 100;
         }
+        .intro-t { letter-spacing: 10px; opacity: 0; transition: 1.5s; text-align: center; }
 
-        /* Основной контент */
+        /* Контент */
         .content-wrapper {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            width: 90%;
-            max-width: 800px;
-        }
-
-        .fsociety-mask {
-            font-size: 8px;
-            line-height: 8px;
-            white-space: pre;
-            margin-bottom: 20px;
-            display: inline-block;
-            text-align: left;
-            opacity: 0.9;
+            position: relative; z-index: 10; width: 95%; max-width: 800px;
+            display: none; flex-direction: column; align-items: center; padding: 40px 0;
         }
 
         .terminal-log {
-            font-size: 12px;
-            color: #555;
-            height: 100px;
-            overflow: hidden;
-            margin: 20px 0;
-            text-transform: uppercase;
+            font-size: 12px; color: #666; height: 150px; text-align: left;
+            width: 100%; margin-bottom: 30px;
         }
 
-        .links-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 30px;
-        }
+        .mask-1 { font-size: 6px; line-height: 6px; white-space: pre; margin-bottom: 40px; opacity: 0.8; }
+        .mask-2 { font-size: 5px; line-height: 5px; white-space: pre; margin-bottom: 40px; }
 
+        .links-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%;
+        }
         .btn {
-            border: 1px solid #fff;
-            padding: 15px;
-            color: #fff;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            transition: 0.3s;
-            background: rgba(0,0,0,0.8);
+            border: 1px solid #fff; padding: 15px; color: #fff; text-decoration: none;
+            text-align: center; font-weight: bold; transition: 0.3s;
         }
+        .btn:hover { background: #fff; color: #000; box-shadow: 0 0 20px #fff; }
+        .btn span { display: block; font-size: 9px; opacity: 0.5; margin-top: 5px; }
 
-        .btn:hover {
-            background: #fff;
-            color: #000;
-            box-shadow: 0 0 30px rgba(255,255,255,0.4);
-        }
-
-        .btn span {
-            display: block;
-            font-size: 9px;
-            opacity: 0.5;
-            margin-top: 5px;
-        }
-
-        /* Эффект помех */
         .overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
-            pointer-events: none;
-            z-index: 20;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, transparent 2px);
+            pointer-events: none; z-index: 20;
         }
     </style>
 </head>
@@ -121,8 +77,15 @@
 <div id="drops-container"></div>
 <div class="overlay"></div>
 
-<div class="content-wrapper">
-    <div class="fsociety-mask">
+<div id="intro">
+    <div id="t1" class="intro-t">WELCOME TO FSOCIETY</div><br>
+    <div id="t2" class="intro-t" style="font-weight: bold;">INDLENDD WORLD</div>
+</div>
+
+<div class="content-wrapper" id="main">
+    <div class="terminal-log" id="log"></div>
+    
+    <div class="mask-1">
 ⣿⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣛⣛⣛⣛⣛⣛⣛⣛⡛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣿
 ⣿⠀⠀⠀⠀⢀⣠⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣦⣤⣀⠀⠀⠀⠀⣿
 ⣿⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣤⡀⠀⣿
@@ -146,56 +109,93 @@
 ⠛⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠛⠛⠛⠉⠉⠛⠛⠛⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠛
     </div>
 
-    <div class="terminal-log" id="log"></div>
+    <div class="mask-2">
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠤⠤⠠⡖⠲⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⡠⠶⣴⣶⣄⠀⠀⠀⢀⣴⣞⣼⣴⣖⣶⣾⡷⣶⣿⣿⣷⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢸⠀⠀⠀⠙⢟⠛⠴⣶⣿⣿⠟⠙⣍⠑⢌⠙⢵⣝⢿⣽⡮⣎⢿⡦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⢱⡶⣋⠿⣽⣸⡀⠘⣎⢢⡰⣷⢿⣣⠹⣿⢸⣿⢿⠿⡦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⢧⡿⣇⡅⣿⣇⠗⢤⣸⣿⢳⣹⡀⠳⣷⣻⣼⢿⣯⡷⣿⣁⠒⠠⢄⡀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⣼⣿⣧⡏⣿⣿⢾⣯⡠⣾⣸⣿⡿⣦⣙⣿⢹⡇⣿⣷⣝⠿⣅⣂⡀⠀⠡⢂⠄⣀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠇⠀⠀⠀⠀⣿⡟⣿⡇⡏⣿⣽⣿⣧⢻⡗⡇⣇⣤⣿⣿⣿⣧⣿⣿⡲⣭⣀⡭⠛⠁⠀⠀⣨⠁⠉⣂⢄⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠸⠀⠀⠀⠀⢻⣿⣇⣥⣏⣘⣿⣏⠛⠻⣷⠿⡻⡛⠷⡽⡿⣿⣿⣿⣷⠟⠓⠉⠢⢄⡀⢠⠇⠀⠀⠀⠁⠫⢢⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢇⠀⠀⠀⢸⣾⣿⣽⣿⣏⣻⠻⠁⢠⠁⠀⠀⠀⠘⣰⣿⣿⢟⢹⢻⠀⠀⠀⠀⠀⠈⠒⢄⡀⠀⠀⠀⠀⠀⠀⠑⢄
+⠀⠀⠀⠀⠀⠀⠘⡄⠀⠀⢸⣯⣿⣿⣿⢷⡀⠀⠀⠀⠀⠀⠀⠀⠛⣩⣿⣿⢿⣾⣸⠀⠀⠀⠀⠀⠀⠀⡤⡞⠉⠉⠁⠀⠀⠀⢀⠌
+⠀⠀⠀⠀⠀⠀⠀⢡⠀⠀⠀⢟⣿⣯⡟⠿⡟⢇⡀⠀⠀⠐⠁⢀⢴⠋⡼⢣⣿⣻⡏⠀⠠⣀⣠⠴⠛⠁⠀⠀⠀⠀⠀⠀⢀⡤⠂⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠇⠀⠀⠈⠊⢻⣿⣜⡹⡀⠈⠱⠂⠤⠔⠡⢶⣽⡷⢟⡿⠕⠛⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⡠⠐⠁⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠘⡄⠀⠀⠀⠀⢿⠿⠿⢿⠾⣽⡀⠀⠀⠀⠈⠻⣥⣃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠤⠒⠁⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⡀⡀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣖⠂⠀⠀⠀⠀⠙⠳⣤⣠⠀⠀⠀⣀⠤⠒⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠵⡐⠄⠀⠀⠀⠀⠀⠀⠀⠈⢷⣄⡀⠀⠠⡀⠀⠈⠙⠶⣖⡉⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡥⠈⠂⠀⠀⠀⠀⠀⠀⠀⣼⣿⡿⣶⣄⠈⠣⡀⠀⠀⠈⣿⣧⣄⠀⠀⠀⠀⠀⡇⠀⡠⠔⠉⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⡄⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⣿⣷⡄⠈⠄⠀⠰⠁⢿⣿⣷⣄⠀⠀⢠⠃⠈⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⡄⠀⠀⠀⠀⠀⢠⣿⣿⣯⣿⣿⣿⣿⣿⡄⢸⢀⠃⠀⢸⣿⣿⣽⣧⠀⢘⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⡄⠀⠀⠀⣠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⢸⢥⠀⠀⣽⣿⣿⣿⡿⠀⠔⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣀⣀⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⢀⣼⣿⣿⣿⡿⠃⠀⡀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠸⠉⠃⠁⠈⠉⠙⠛⠿⠿⠽⠿⠟⠛⠉⠛⡲⣿⣿⠿⡿⠟⠁⠀⠀⠄⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⣀⠤⠒⠈⠉⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⢠⡏⠁⠀⠀⠀⠀⠐⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⣠⡟⠀⠀⠀⠀⠀⠀⠌⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢔⠏⠀⠀⠀⠀⠀⠀⠀⠆⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠒⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⢀⡠⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠊⠀⠀⠀⠀⠀⣃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⡠⣻⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢫⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣰⡿⣿⣿⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⣸⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣼⠏⣸⣿⣷⢷⠙⣻⢶⣤⣄⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⠾⠉⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠰⣏⠀⣿⣿⡘⣼⡇⠀⠁⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠉⠁⠀⠀⣽⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢙⠓⠛⠘⣧⠾⢷⣄⠀⠀⠀⠈⠻⣿⣿⣿⣿⣿⣿⣿⠿⠋⠀⠀⠀⠀⠀⠀⣿⢟⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠸⠀⠀⠀⢸⣧⠀⠹⣆⠀⠀⠀⠀⠈⢻⣿⣿⡿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⣿⢂⠙⢿⡷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢃⠀⠀⠈⠙⠀⠀⠻⡄⠀⠀⠀⠀⠸⡀⠹⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡾⠐⠠⠀⠻⠬⠄⡒⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠈⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢣⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠘⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠐⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠑⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⡀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    </div>
 
-    <div class="links-container">
-        <a href="https://t.me/indlendd" class="btn" target="_blank">
-            TELEGRAM
-            <span>@indlendd</span>
-        </a>
-        <a href="https://instagram.com/moyra_atrooo" class="btn" target="_blank">
-            INSTAGRAM
-            <span>@moyra_atrooo</span>
-        </a>
+    <div class="links-grid">
+        <a href="https://t.me/indlendd" class="btn" target="_blank">TELEGRAM<span>@indlendd</span></a>
+        <a href="https://instagram.com/moyra_atrooo" class="btn" target="_blank">INSTAGRAM<span>@moyra_atrooo</span></a>
     </div>
 </div>
 
 <script>
-    // Создание эффекта капель
-    function createDrop() {
-        const container = document.getElementById('drops-container');
-        const drop = document.createElement('div');
-        drop.className = 'drop';
-        drop.style.left = Math.random() * 100 + 'vw';
-        drop.style.height = Math.random() * 100 + 50 + 'px';
-        drop.style.animationDuration = Math.random() * 2 + 1 + 's';
-        drop.style.opacity = Math.random() * 0.5;
-        container.appendChild(drop);
-        setTimeout(() => drop.remove(), 3000);
-    }
-    setInterval(createDrop, 100);
+    // Стекание капель
+    setInterval(() => {
+        const d = document.createElement('div');
+        d.className = 'drop';
+        d.style.left = Math.random() * 100 + 'vw';
+        d.style.height = Math.random() * 80 + 20 + 'px';
+        d.style.animationDuration = Math.random() * 2 + 1 + 's';
+        document.getElementById('drops-container').appendChild(d);
+        setTimeout(() => d.remove(), 3000);
+    }, 100);
 
-    // Логи терминала
+    // Логика переходов
     const logLines = [
-        "> BOOTING SYSTEM_V3",
-        "> DECRYPTING FSOCIETY PROTOCOLS",
-        "> WIPE ALL TRACES... DONE",
-        "> BYPASSING UAC... SUCCESS",
-        "> ACCESS GRANTED: INDLENDD",
-        "> 0.0.0.0.CONNECTION_ESTABLISHED",
-        "> WAITING FOR INPUT..."
+        "> INITIALIZING BOOT_LOADER...", "> BYPASSING SECURITY NODES...",
+        "> ACCESSING FSOCIETY_CORE...", "> INJECTING PAYLOAD...",
+        "> STATUS: CONNECTED", "> WELCOME TO THE VOID."
     ];
-    let i = 0;
-    function showLog() {
-        if(i < logLines.length) {
-            const p = document.createElement('div');
-            p.textContent = logLines[i];
-            document.getElementById('log').appendChild(p);
-            i++;
-            setTimeout(showLog, 500);
+
+    setTimeout(() => document.getElementById('t1').style.opacity = '1', 500);
+    setTimeout(() => document.getElementById('t2').style.opacity = '1', 1500);
+    
+    setTimeout(() => {
+        document.getElementById('intro').style.display = 'none';
+        const main = document.getElementById('main');
+        main.style.display = 'flex';
+        
+        let idx = 0;
+        const logDiv = document.getElementById('log');
+        function typeLog() {
+            if(idx < logLines.length) {
+                const p = document.createElement('div');
+                p.textContent = logLines[idx];
+                logDiv.appendChild(p);
+                idx++;
+                setTimeout(typeLog, 400);
+            }
         }
-    }
-    window.onload = showLog;
+        typeLog();
+    }, 4500);
 </script>
 
 </body>
