@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Terminal Access</title>
+    <style>
+        body {
+            background-color: #000000; /* Глубокий черный */
+            color: #FFFFFF;           /* Чистый белый */
+            font-family: 'Consolas', 'Monaco', monospace; /* Системный шрифт кода */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .terminal-box {
+            border: 2px solid #FFFFFF; /* Белая рамка */
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05); /* Легкий эффект стекла */
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); /* Мягкое белое свечение */
+            max-width: 80%;
+        }
+        .line {
+            margin: 10px 0;
+            border-right: 2px solid #FFFFFF;
+            white-space: nowrap;
+            overflow: hidden;
+            width: fit-content;
+            animation: typing 3.5s steps(40, end), blink .75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink {
+            from, to { border-color: transparent }
+            50% { border-color: #FFFFFF }
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal-box">
+        <div class="line">> SYSTEM_INITIALIZED...</div>
+        <div class="line">> CONNECTION: SECURE</div>
+        <div class="line">> WELCOME TO THE DARK ZONE.</div>
+    </div>
+</body>
+</html>
