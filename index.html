@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FSOCIETY | INDLENDD</title>
+    <title>TERMINAL_ERROR</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+
+        * { cursor: crosshair; }
 
         body {
             background-color: #000;
             color: #fff;
-            font-family: 'Share Tech Mono', monospace;
+            font-family: 'Courier Prime', monospace;
             margin: 0;
             height: 100vh;
             overflow: hidden;
@@ -19,7 +21,17 @@
             justify-content: center;
         }
 
-        /* Экран приветствия */
+        /* Эффект помех на весь экран */
+        body::before {
+            content: " ";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 2px);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Intro Screen */
         #intro {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -33,142 +45,164 @@
         }
 
         .intro-text {
-            font-size: 2rem;
-            letter-spacing: 5px;
+            font-size: 1.5rem;
+            letter-spacing: 12px;
             margin: 10px;
             opacity: 0;
-            animation: fadeInOut 4s forwards;
+            animation: glitchFade 4s forwards;
+            text-transform: uppercase;
         }
 
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: scale(0.9); filter: blur(10px); }
-            20% { opacity: 1; transform: scale(1); filter: blur(0); }
-            80% { opacity: 1; transform: scale(1); filter: blur(0); }
-            100% { opacity: 0; transform: scale(1.1); filter: blur(10px); }
+        @keyframes glitchFade {
+            0% { opacity: 0; filter: blur(20px); transform: skewX(20deg); }
+            10% { opacity: 1; filter: blur(0); transform: skewX(0); }
+            90% { opacity: 1; filter: blur(0); }
+            100% { opacity: 0; filter: blur(10px); }
         }
 
-        /* Основной контент */
-        .main-content {
+        /* Main Section */
+        .main-frame {
             opacity: 0;
-            transition: opacity 2s ease-in;
-            width: 90%;
-            max-width: 700px;
-            border: 1px solid #444;
-            padding: 20px;
-            background: rgba(5, 5, 5, 0.95);
-            box-shadow: 0 0 40px rgba(255, 0, 0, 0.2);
+            transition: opacity 1s;
+            width: 85%;
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
         }
 
-        .skull {
-            font-size: 7px;
-            line-height: 7px;
+        .side-panel {
+            border-right: 1px solid #333;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .skull-ascii {
+            font-size: 5px;
+            line-height: 5px;
             white-space: pre;
-            text-align: center;
-            color: #ff0000;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px #ff0000;
+            opacity: 0.7;
         }
 
-        .terminal-box {
-            background: #000;
-            padding: 15px;
-            border: 1px solid #222;
-            height: 200px;
-            overflow-y: hidden;
-            font-size: 14px;
-            color: #0f0; /* Классический зеленый для контраста */
+        .terminal-output {
+            font-size: 13px;
+            height: 300px;
+            overflow: hidden;
+            line-height: 1.4;
+            padding: 10px;
         }
 
         .links {
             margin-top: 20px;
-            display: flex;
-            gap: 10px;
+            border-top: 1px solid #333;
+            padding-top: 20px;
         }
 
         .links a {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #fff;
-            color: #fff;
+            display: block;
+            color: #888;
             text-decoration: none;
-            text-align: center;
-            transition: 0.3s;
+            margin: 5px 0;
+            font-size: 12px;
+            text-transform: uppercase;
         }
 
         .links a:hover {
-            background: #fff;
-            color: #000;
-            box-shadow: 0 0 15px #fff;
+            color: #fff;
+            text-decoration: underline;
         }
 
-        .cursor { animation: blink 0.8s infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            position: absolute;
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
     </style>
 </head>
 <body>
 
 <div id="intro">
-    <div class="intro-text" style="animation-delay: 0.5s;">ДОБРО ПОЖАЛОВАТЬ В FSOCIETY</div>
-    <div class="intro-text" style="animation-delay: 1.5s; color: red;">INDLENDD WORLD</div>
+    <div class="intro-text" style="animation-delay: 0.5s;">WELCOME TO FSOCIETY</div>
+    <div class="intro-text" style="animation-delay: 1.8s;">INDLENDD WORLD</div>
 </div>
 
-<div class="main-content" id="main">
-    <div class="skull">
-         ______
-      .-"      "-.
-     /            \
-    |              |
-    |,  .-.  .-.  ,|
-    | )(__/  \__)( |
-    |/     /\     \|
-    (_     ^^     _)
-     \__|IIIIII|__/
-      | \IIIIII/ |
-      \          /
-       `--------`
+<div class="main-frame" id="main">
+    <div class="side-panel">
+        <div class="skull-ascii">
+        _______
+     .-"       "-.
+    /             \
+   |               |
+   |,  .-.   .-.  ,|
+   | )(__/   \__)( |
+   |/     /\     \|
+   (_     ^^     _)
+    \__|IIIIII|__/
+     | \IIIIII/ |
+     \          /
+      `--------`
+        </div>
+        <div style="font-size: 9px; color: #444;">
+            SYSTEM_STATUS: CORRUPTED<br>
+            OVERRIDE_ENABLED: YES<br>
+            NODE_TRACE: HIDDEN
+        </div>
     </div>
 
-    <div class="terminal-box" id="term"></div>
-
-    <div class="links">
-        <a href="https://instagram.com/moyra_atrooo" target="_blank">INSTAGRAM</a>
-        <a href="https://t.me/indlendd" target="_blank">TELEGRAM</a>
+    <div class="content-area">
+        <div class="terminal-output" id="term"></div>
+        <div class="links">
+            <a href="https://instagram.com/moyra_atrooo" target="_blank">> [ EXT_LINK: INSTAGRAM ]</a>
+            <a href="https://t.me/indlendd" target="_blank">> [ EXT_LINK: TELEGRAM ]</a>
+        </div>
     </div>
 </div>
+
+<div class="scanline"></div>
 
 <script>
     const intro = document.getElementById('intro');
     const main = document.getElementById('main');
     const term = document.getElementById('term');
 
-    // Переключение с интро на сайт
     setTimeout(() => {
         intro.style.display = 'none';
         main.style.opacity = '1';
-        typeTerminal();
-    }, 4500);
+        startTerminal();
+    }, 5000);
 
-    const lines = [
-        "> CONNECTING TO LOCALHOST...",
-        "> AUTHENTICATION SUCCESSFUL.",
-        "> LOADING SYSTEM_CORE... DONE",
-        "> EXEC_SCRIPT: HELLO_WORLD.SH",
-        "> STATUS: AGGRESSIVE_MODE_ON",
-        "> ПРИВЕТ, INDLENDD.",
-        "> ВСЕ СИСТЕМЫ ПОД КОНТРОЛЕМ.",
-        "> ОЖИДАНИЕ КОМАНДЫ..."
+    const log = [
+        "SYSTEM_BOOT: KERNEL_INIT...",
+        "DECRYPTING RSA_KEYS... SUCCESS",
+        "ESTABLISHING SECURE_TUNNEL...",
+        "BYPASSING GLOBAL_FIREWALL...",
+        "ACCESSING ENCRYPTED_STORAGE...",
+        "PARSING DATA_STREAM...",
+        "WARNING: UNKNOWN_ACCESS_POINT",
+        "EXTRACTING CREDENTIALS...",
+        "SESSION_ID: 0x9928AF1",
+        "STAY_QUIET. WE_ARE_WATCHING.",
+        "------------------------------",
+        "> Я УЖЕ ЗНАЮ О ТЕБЕ МНОГОЕ."
     ];
 
-    let lineIdx = 0;
-    function typeTerminal() {
-        if (lineIdx < lines.length) {
-            let p = document.createElement('div');
-            p.textContent = lines[lineIdx];
-            term.appendChild(p);
-            lineIdx++;
-            setTimeout(typeTerminal, 400);
-        } else {
-            term.innerHTML += '<span class="cursor">_</span>';
+    let i = 0;
+    function startTerminal() {
+        if (i < log.length) {
+            let line = document.createElement('div');
+            line.textContent = log[i];
+            term.appendChild(line);
+            i++;
+            setTimeout(startTerminal, 300);
         }
     }
 </script>
