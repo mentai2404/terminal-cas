@@ -3,124 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INDLEND WORLD | System</title>
+    <title>INDLEND WORLD | Terminal</title>
     <style>
         body {
             background-color: #000;
             color: #fff;
-            font-family: 'Courier New', monospace;
+            font-family: 'Consolas', 'Courier New', monospace;
+            margin: 0;
+            overflow: hidden; /* Чтобы не было скролла */
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
-            margin: 0;
-            padding-top: 50px;
-            overflow-x: hidden;
+            justify-content: center;
+            height: 100vh;
         }
 
-        .ascii-art {
-            font-size: 10px;
-            line-height: 10px;
-            white-space: pre;
-            margin-bottom: 20px;
-            color: #fff;
+        /* Фоновый слой с цифрами */
+        #matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
         }
 
-        .glitch {
-            font-size: 1.8rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .terminal-text {
+        .container {
+            background: rgba(0, 0, 0, 0.85);
+            padding: 20px;
+            border: 1px solid #333;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
             width: 90%;
-            max-width: 500px;
-            text-align: left;
-            border: 1px solid #fff;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            min-height: 150px;
+            max-width: 650px;
+            z-index: 1;
+        }
+
+        .ascii-mask {
+            font-size: 6px;
+            line-height: 5px;
+            white-space: pre;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .glitch-title {
+            font-size: 24px;
+            text-align: center;
+            letter-spacing: 8px;
+            border-bottom: 1px solid #fff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        #terminal {
+            font-size: 13px;
+            height: 180px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            color: #ccc;
         }
 
         .links {
-            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
 
         .links a {
-            color: #fff;
+            color: #000;
+            background: #fff;
             text-decoration: none;
-            display: block;
-            margin: 10px 0;
-            padding: 8px;
-            border: 1px solid #fff;
-            transition: 0.3s;
+            padding: 10px;
             text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+            transition: 0.3s;
         }
 
         .links a:hover {
-            background: #fff;
-            color: #000;
+            background: #ff0000;
+            color: #fff;
         }
 
         .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 18px;
-            background-color: #fff;
-            animation: blink 1s infinite;
-            vertical-align: middle;
+            animation: blink 0.8s infinite;
         }
-
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
 
-    <div class="glitch">INDLEND WORLD</div>
+<canvas id="matrix-bg"></canvas>
 
-    <div class="ascii-art">
-     .----------.
-    /          \
-   /   _    _   \
-  /   ( )  ( )   \
- /                \
-|   |  |  |  |    |
-|   |  |  |  |    |
- \   \______/    /
-  \            /
-   '----------'
+<div class="container">
+    <div class="glitch-title">INDLEND WORLD</div>
+
+    <div class="ascii-mask">
+                MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+             MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+           MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+         MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+        MMMMMMMNNNNNNNNNMMMMMMMMMMMMNNNNNNNNNMMMMMMM
+       MMMMMMN          NMMMMMMMMMMN          NMMMMMM
+      MMMMMMN            NMMMMMMMMN            NMMMMMM
+      MMMMMMN      ()    NMMMMMMMMN      ()    NMMMMMM
+      MMMMMMN            NMMMMMMMMN            NMMMMMM
+       MMMMMMN          NMMMMMMMMMMN          NMMMMMM
+        MMMMMMMN      NMMMMMMMMMMMMMMN      NMMMMMMM
+          MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+            MMMMMMMMM/  \MMMMMMMMMM/  \MMMMMMMMM
+              MMMMMM/    \MMMMMMMM/    \MMMMMM
+                MM/        \MMMM/        \MM
+                /            \ /            \
+               |    XXXXXXXXXXXXXXX          |
+               |   X               X         |
+                \   XXXXXXXXXXXXXXX         /
+                 \                         /
+                  \_______________________/
     </div>
 
-    <div class="terminal-text" id="terminal">
-        <span id="typed-text"></span><span class="cursor"></span>
-    </div>
+    <div id="terminal"></div>
 
     <div class="links">
-        <a href="https://instagram.com/moyra_atrooo" target="_blank">[ INSTAGRAM: moyra_atrooo ]</a>
-        <a href="https://t.me/indlendd" target="_blank">[ TELEGRAM: @indlendd ]</a>
+        <a href="https://instagram.com/moyra_atrooo" target="_blank">INSTAGRAM</a>
+        <a href="https://t.me/indlendd" target="_blank">TELEGRAM</a>
     </div>
+</div>
 
-    <script>
-        const text = "> Инициализация системы...\n> Протокол: fsociety\n> Доступ разрешен...\n> Приветствуем в INDLEND WORLD.\n> Ищем цели...\n> Статус: АКТИВЕН";
-        let i = 0;
-        const speed = 50; // Скорость печати в мс
+<script>
+    // Фон Матрицы
+    const canvas = document.getElementById('matrix-bg');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const letters = "010101010101010101010101";
+    const fontSize = 10;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
 
-        function typeWriter() {
-            if (i < text.length) {
-                document.getElementById("typed-text").innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
-                i++;
-                setTimeout(typeWriter, speed);
-            }
+    function drawMatrix() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#fff';
+        for (let i = 0; i < drops.length; i++) {
+            const text = letters.charAt(Math.floor(Math.random() * letters.length));
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
         }
+    }
+    setInterval(drawMatrix, 50);
 
-        window.onload = typeWriter;
-    </script>
+    // Терминал
+    const terminal = document.getElementById('terminal');
+    const lines = [
+        "> INITIALIZING BOOT SEQUENCE...",
+        "> LOADING INDLEND_OS v2.0...",
+        "> DECRYPTING FSOCIETY_MODULES... DONE",
+        "> BYPASSING LOCAL FIREWALL... SUCCESS",
+        "> IP_TRACE: 127.0.0.1 (PROTECTED)",
+        "> SYSTEM STATUS: NOMINAL",
+        "> WELCOME, INDLENDD.",
+        "> WAITING FOR INPUT..."
+    ];
+    let lineIdx = 0;
+
+    function typeLine() {
+        if (lineIdx < lines.length) {
+            const p = document.createElement('div');
+            p.innerHTML = lines[lineIdx];
+            terminal.appendChild(p);
+            lineIdx++;
+            setTimeout(typeLine, 600);
+        } else {
+            terminal.innerHTML += '<span class="cursor">_</span>';
+        }
+    }
+    setTimeout(typeLine, 1000);
+</script>
 
 </body>
 </html>
