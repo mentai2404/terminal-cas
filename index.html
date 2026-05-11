@@ -1,50 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Terminal Access</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INDLEND WORLD | System</title>
     <style>
         body {
-            background-color: #000000; /* Глубокий черный */
-            color: #FFFFFF;           /* Чистый белый */
-            font-family: 'Consolas', 'Monaco', monospace; /* Системный шрифт кода */
+            background-color: #000;
+            color: #fff;
+            font-family: 'Courier New', monospace;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
+            justify-content: flex-start;
+            min-height: 100vh;
             margin: 0;
-            overflow: hidden;
+            padding-top: 50px;
+            overflow-x: hidden;
         }
-        .terminal-box {
-            border: 2px solid #FFFFFF; /* Белая рамка */
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.05); /* Легкий эффект стекла */
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); /* Мягкое белое свечение */
-            max-width: 80%;
+
+        .ascii-art {
+            font-size: 10px;
+            line-height: 10px;
+            white-space: pre;
+            margin-bottom: 20px;
+            color: #fff;
         }
-        .line {
+
+        .glitch {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .terminal-text {
+            width: 90%;
+            max-width: 500px;
+            text-align: left;
+            border: 1px solid #fff;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            min-height: 150px;
+        }
+
+        .links {
+            margin-top: 20px;
+        }
+
+        .links a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
             margin: 10px 0;
-            border-right: 2px solid #FFFFFF;
-            white-space: nowrap;
-            overflow: hidden;
-            width: fit-content;
-            animation: typing 3.5s steps(40, end), blink .75s step-end infinite;
+            padding: 8px;
+            border: 1px solid #fff;
+            transition: 0.3s;
+            text-align: center;
         }
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
+
+        .links a:hover {
+            background: #fff;
+            color: #000;
         }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background-color: #fff;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
         @keyframes blink {
-            from, to { border-color: transparent }
-            50% { border-color: #FFFFFF }
+            50% { opacity: 0; }
         }
     </style>
 </head>
 <body>
-    <div class="terminal-box">
-        <div class="line">> SYSTEM_INITIALIZED...</div>
-        <div class="line">> CONNECTION: SECURE</div>
-        <div class="line">> WELCOME TO THE DARK ZONE.</div>
+
+    <div class="glitch">INDLEND WORLD</div>
+
+    <div class="ascii-art">
+     .----------.
+    /          \
+   /   _    _   \
+  /   ( )  ( )   \
+ /                \
+|   |  |  |  |    |
+|   |  |  |  |    |
+ \   \______/    /
+  \            /
+   '----------'
     </div>
+
+    <div class="terminal-text" id="terminal">
+        <span id="typed-text"></span><span class="cursor"></span>
+    </div>
+
+    <div class="links">
+        <a href="https://instagram.com/moyra_atrooo" target="_blank">[ INSTAGRAM: moyra_atrooo ]</a>
+        <a href="https://t.me/indlendd" target="_blank">[ TELEGRAM: @indlendd ]</a>
+    </div>
+
+    <script>
+        const text = "> Инициализация системы...\n> Протокол: fsociety\n> Доступ разрешен...\n> Приветствуем в INDLEND WORLD.\n> Ищем цели...\n> Статус: АКТИВЕН";
+        let i = 0;
+        const speed = 50; // Скорость печати в мс
+
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById("typed-text").innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+
+        window.onload = typeWriter;
+    </script>
+
 </body>
 </html>
