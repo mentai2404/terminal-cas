@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TERMINAL_ERROR</title>
+    <title>INDLENDD // VOID</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
 
-        * { cursor: crosshair; }
+        * { box-sizing: border-box; cursor: crosshair; }
 
         body {
             background-color: #000;
@@ -17,194 +17,185 @@
             height: 100vh;
             overflow: hidden;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
         }
 
-        /* Эффект помех на весь экран */
-        body::before {
-            content: " ";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 2px);
+        /* Эффект стекающей белой крови */
+        #drops-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
-            z-index: 10;
+            z-index: 1;
         }
 
-        /* Intro Screen */
-        #intro {
+        .drop {
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.8));
+            border-radius: 0 0 5px 5px;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100px); }
+            100% { transform: translateY(100vh); }
+        }
+
+        /* Основной контент */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        .fsociety-mask {
+            font-size: 8px;
+            line-height: 8px;
+            white-space: pre;
+            margin-bottom: 20px;
+            display: inline-block;
+            text-align: left;
+            opacity: 0.9;
+        }
+
+        .terminal-log {
+            font-size: 12px;
+            color: #555;
+            height: 100px;
+            overflow: hidden;
+            margin: 20px 0;
+            text-transform: uppercase;
+        }
+
+        .links-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            border: 1px solid #fff;
+            padding: 15px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            background: rgba(0,0,0,0.8);
+        }
+
+        .btn:hover {
+            background: #fff;
+            color: #000;
+            box-shadow: 0 0 30px rgba(255,255,255,0.4);
+        }
+
+        .btn span {
+            display: block;
+            font-size: 9px;
+            opacity: 0.5;
+            margin-top: 5px;
+        }
+
+        /* Эффект помех */
+        .overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            text-align: center;
-        }
-
-        .intro-text {
-            font-size: 1.5rem;
-            letter-spacing: 12px;
-            margin: 10px;
-            opacity: 0;
-            animation: glitchFade 4s forwards;
-            text-transform: uppercase;
-        }
-
-        @keyframes glitchFade {
-            0% { opacity: 0; filter: blur(20px); transform: skewX(20deg); }
-            10% { opacity: 1; filter: blur(0); transform: skewX(0); }
-            90% { opacity: 1; filter: blur(0); }
-            100% { opacity: 0; filter: blur(10px); }
-        }
-
-        /* Main Section */
-        .main-frame {
-            opacity: 0;
-            transition: opacity 1s;
-            width: 85%;
-            max-width: 800px;
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 20px;
-        }
-
-        .side-panel {
-            border-right: 1px solid #333;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .skull-ascii {
-            font-size: 5px;
-            line-height: 5px;
-            white-space: pre;
-            opacity: 0.7;
-        }
-
-        .terminal-output {
-            font-size: 13px;
-            height: 300px;
-            overflow: hidden;
-            line-height: 1.4;
-            padding: 10px;
-        }
-
-        .links {
-            margin-top: 20px;
-            border-top: 1px solid #333;
-            padding-top: 20px;
-        }
-
-        .links a {
-            display: block;
-            color: #888;
-            text-decoration: none;
-            margin: 5px 0;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        .links a:hover {
-            color: #fff;
-            text-decoration: underline;
-        }
-
-        .scanline {
-            width: 100%;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.1);
-            position: absolute;
-            animation: scan 4s linear infinite;
-        }
-
-        @keyframes scan {
-            0% { top: 0; }
-            100% { top: 100%; }
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
+            pointer-events: none;
+            z-index: 20;
         }
     </style>
 </head>
 <body>
 
-<div id="intro">
-    <div class="intro-text" style="animation-delay: 0.5s;">WELCOME TO FSOCIETY</div>
-    <div class="intro-text" style="animation-delay: 1.8s;">INDLENDD WORLD</div>
-</div>
+<div id="drops-container"></div>
+<div class="overlay"></div>
 
-<div class="main-frame" id="main">
-    <div class="side-panel">
-        <div class="skull-ascii">
-        _______
-     .-"       "-.
-    /             \
-   |               |
-   |,  .-.   .-.  ,|
-   | )(__/   \__)( |
-   |/     /\     \|
-   (_     ^^     _)
-    \__|IIIIII|__/
-     | \IIIIII/ |
-     \          /
-      `--------`
-        </div>
-        <div style="font-size: 9px; color: #444;">
-            SYSTEM_STATUS: CORRUPTED<br>
-            OVERRIDE_ENABLED: YES<br>
-            NODE_TRACE: HIDDEN
-        </div>
+<div class="content-wrapper">
+    <div class="fsociety-mask">
+⣿⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣛⣛⣛⣛⣛⣛⣛⣛⡛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣿
+⣿⠀⠀⠀⠀⢀⣠⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣦⣤⣀⠀⠀⠀⠀⣿
+⣿⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣤⡀⠀⣿
+⣿⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣤⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⠀⠈⢻⣿⠿⠛⠛⠛⠛⠛⢿⣿⣿⣿⣿⣿⣿⡿⠟⠛⠛⠛⠛⠻⣿⣿⠋⠀⣿
+⣿⠛⠁⢸⣥⣴⣾⣿⣷⣦⡀⠀⠈⠛⣿⣿⠛⠋⠀⢀⣠⣾⣿⣷⣦⣤⡿⠈⢉⣿
+⣿⢋⣩⣼⡿⣿⣿⣿⡿⠿⢿⣷⣤⣤⣿⣿⣦⣤⣴⣿⠿⠿⣿⣿⣿⢿⣷⣬⣉⣿
+⣿⣿⣿⣿⣷⣿⡟⠁⠀⠀⠀⠈⢿⣿⣿⣿⢿⣿⠋⠀⠀⠀⠈⢻⣿⣧⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣥⣶⣶⣶⣤⣴⣿⡿⣼⣿⡿⣿⣇⣤⣴⣶⣶⣾⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⡿⢛⣿⣿⣿⣿⣿⣿⡿⣯⣾⣿⣿⣿⣮⣿⣿⣿⣿⣿⣿⣿⡟⠿⣿⣿⣿
+⣿⣿⡏⠀⠸⣿⣿⣿⣿⣿⠿⠓⠛⢿⣿⣿⡿⠛⠛⠻⢿⣿⣿⣿⣿⡇⠀⠹⣿⣿
+⣿⣿⡁⠀⠀⠈⠙⠛⠉⠀⠀⠀⠀⠀⠉⠉⠀⠀⠀⠀⠀⠈⠙⠛⠉⠀⠀⠀⣿⣿
+⣿⠛⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡸⠛⣿
+⣿⠀⠈⢳⣶⣤⣤⣤⣤⡄⠀⠀⠠⠤⠤⠤⠤⠤⠀⠀⢀⣤⣤⣤⣤⣴⣾⠃⠀⣿
+⣿⠀⠀⠈⣿⣿⣿⣿⣿⣿⣦⣀⡀⠀⠀⠀⠀⠀⣀⣤⣾⣿⣿⣿⣿⣿⠇⠀⠀⣿
+⣿⠀⠀⠀⢹⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣶⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⣿
+⣿⠀⠀⠀⠈⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⣿
+⣿⠀⠀⠀⠀⠀⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠁⠀⠀⠀⠀⣿
+⣿⠀⠀⠀⠀⠀⠀⠈⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀⠀⠀⠀⣿
+⠛⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠛⠛⠛⠉⠉⠛⠛⠛⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠛
     </div>
 
-    <div class="content-area">
-        <div class="terminal-output" id="term"></div>
-        <div class="links">
-            <a href="https://instagram.com/moyra_atrooo" target="_blank">> [ EXT_LINK: INSTAGRAM ]</a>
-            <a href="https://t.me/indlendd" target="_blank">> [ EXT_LINK: TELEGRAM ]</a>
-        </div>
+    <div class="terminal-log" id="log"></div>
+
+    <div class="links-container">
+        <a href="https://t.me/indlendd" class="btn" target="_blank">
+            TELEGRAM
+            <span>@indlendd</span>
+        </a>
+        <a href="https://instagram.com/moyra_atrooo" class="btn" target="_blank">
+            INSTAGRAM
+            <span>@moyra_atrooo</span>
+        </a>
     </div>
 </div>
-
-<div class="scanline"></div>
 
 <script>
-    const intro = document.getElementById('intro');
-    const main = document.getElementById('main');
-    const term = document.getElementById('term');
+    // Создание эффекта капель
+    function createDrop() {
+        const container = document.getElementById('drops-container');
+        const drop = document.createElement('div');
+        drop.className = 'drop';
+        drop.style.left = Math.random() * 100 + 'vw';
+        drop.style.height = Math.random() * 100 + 50 + 'px';
+        drop.style.animationDuration = Math.random() * 2 + 1 + 's';
+        drop.style.opacity = Math.random() * 0.5;
+        container.appendChild(drop);
+        setTimeout(() => drop.remove(), 3000);
+    }
+    setInterval(createDrop, 100);
 
-    setTimeout(() => {
-        intro.style.display = 'none';
-        main.style.opacity = '1';
-        startTerminal();
-    }, 5000);
-
-    const log = [
-        "SYSTEM_BOOT: KERNEL_INIT...",
-        "DECRYPTING RSA_KEYS... SUCCESS",
-        "ESTABLISHING SECURE_TUNNEL...",
-        "BYPASSING GLOBAL_FIREWALL...",
-        "ACCESSING ENCRYPTED_STORAGE...",
-        "PARSING DATA_STREAM...",
-        "WARNING: UNKNOWN_ACCESS_POINT",
-        "EXTRACTING CREDENTIALS...",
-        "SESSION_ID: 0x9928AF1",
-        "STAY_QUIET. WE_ARE_WATCHING.",
-        "------------------------------",
-        "> Я УЖЕ ЗНАЮ О ТЕБЕ МНОГОЕ."
+    // Логи терминала
+    const logLines = [
+        "> BOOTING SYSTEM_V3",
+        "> DECRYPTING FSOCIETY PROTOCOLS",
+        "> WIPE ALL TRACES... DONE",
+        "> BYPASSING UAC... SUCCESS",
+        "> ACCESS GRANTED: INDLENDD",
+        "> 0.0.0.0.CONNECTION_ESTABLISHED",
+        "> WAITING FOR INPUT..."
     ];
-
     let i = 0;
-    function startTerminal() {
-        if (i < log.length) {
-            let line = document.createElement('div');
-            line.textContent = log[i];
-            term.appendChild(line);
+    function showLog() {
+        if(i < logLines.length) {
+            const p = document.createElement('div');
+            p.textContent = logLines[i];
+            document.getElementById('log').appendChild(p);
             i++;
-            setTimeout(startTerminal, 300);
+            setTimeout(showLog, 500);
         }
     }
+    window.onload = showLog;
 </script>
 
 </body>
