@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FSOCIETY // CRITICAL_ERROR</title>
+    <title>FSOCIETY // ALERT</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@700&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; cursor: crosshair; }
@@ -19,62 +19,112 @@
             justify-content: center;
         }
 
-        /* Эффект тряски экрана (Visual Stress) */
+        /* Жесткий глитч и тряска */
         .glitch-screen {
-            animation: shake 0.05s infinite;
             display: none;
             width: 100%;
             height: 100%;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            background: #000;
+            animation: shake 0.03s infinite;
         }
 
         @keyframes shake {
-            0% { transform: translate(1px, 1px); }
-            50% { transform: translate(-2px, -1px); filter: invert(1); }
-            100% { transform: translate(1px, 1px); }
+            0% { transform: translate(2px, 2px); filter: invert(0); }
+            25% { transform: translate(-3px, -2px); }
+            50% { transform: translate(1px, -1px); filter: invert(1); }
+            75% { transform: translate(-2px, 2px); }
+            100% { transform: translate(2px, -2px); }
         }
 
-        /* Стекающая кровь */
-        .drop {
-            position: absolute; top: -100px; width: 2px;
-            background: #fff; z-index: 999; pointer-events: none;
-            animation: fall linear infinite;
-        }
-        @keyframes fall { to { transform: translateY(110vh); } }
-
-        /* Интро */
+        /* Экран входа */
         #intro {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; display: flex; flex-direction: column;
             align-items: center; justify-content: center; z-index: 100;
-            text-align: center;
         }
-        .intro-btn {
-            border: 1px solid #fff; padding: 20px; color: #fff;
-            text-decoration: none; letter-spacing: 5px; cursor: pointer;
-            animation: pulse 1s infinite;
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        .start-btn {
+            border: 2px solid #fff;
+            padding: 20px 40px;
+            color: #fff;
+            font-size: 1.5rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .start-btn:hover { background: #fff; color: #000; }
+
+        .hint-text {
+            color: #555;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
 
         /* Маска fsociety */
         .fsociety-mask {
-            font-size: 6px; line-height: 7px; white-space: pre; 
-            margin-bottom: 30px; text-shadow: 0 0 10px #fff;
+            font-size: 6px;
+            line-height: 7px;
+            white-space: pre;
+            margin-bottom: 40px;
+            text-shadow: 0 0 15px #fff;
         }
 
-        .links-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 90%; max-width: 600px; }
-        .btn { border: 1px solid #fff; padding: 15px; color: #fff; text-decoration: none; text-align: center; font-weight: bold; }
-        
-        .warning { color: red; font-size: 10px; margin-top: 20px; letter-spacing: 2px; }
+        .links-grid { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 20px; 
+            width: 80%; 
+            max-width: 400px; 
+            z-index: 10;
+        }
+
+        .btn { 
+            border: 1px solid #fff; 
+            padding: 20px; 
+            color: #fff; 
+            text-decoration: none; 
+            text-align: center; 
+            font-weight: bold; 
+            background: rgba(0,0,0,0.8);
+            font-size: 1.2rem;
+        }
+
+        .btn span { display: block; font-size: 10px; opacity: 0.5; margin-top: 5px; }
+
+        .danger-text {
+            color: #ff0000;
+            font-weight: bold;
+            margin-top: 30px;
+            font-size: 14px;
+            letter-spacing: 3px;
+        }
     </style>
 </head>
 <body>
 
     <div id="intro">
-        <div style="margin-bottom: 20px; letter-spacing: 10px;">SYSTEM BREACH</div>
-        <div class="intro-btn" onclick="startHack()">[ INITIALIZE ]</div>
+        <div style="margin-bottom: 40px; letter-spacing: 5px; opacity: 0.7;">FSOCIETY_ENCRYPTION_LINK</div>
+        <div class="btn-container">
+            <div class="start-btn" onclick="triggerOverload()">INITIALIZE</div>
+            <div class="hint-text">Нажимай...</div>
+        </div>
     </div>
 
     <div class="glitch-screen" id="main">
@@ -107,50 +157,35 @@
             <a href="https://instagram.com/moyra_atrooo" class="btn">INSTAGRAM<span>@moyra_atrooo</span></a>
         </div>
         
-        <div class="warning">CRITICAL_TEMP: 98°C | OVERLOAD_ACTIVE</div>
+        <div class="danger-text">WARNING: OVERHEATING DETECTED</div>
     </div>
 
+    <audio id="scream" loop>
+        <source src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Scream&filename=mt/MTI5ODE0NjgxMjk4MzI3_xL_2f_2b_2f_2fxWz9W8.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
-        // Звуковое давление (White Noise)
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playNoise() {
-            const bufferSize = 2 * audioCtx.sampleRate,
-            noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
-            output = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                output[i] = Math.random() * 2 - 1;
+        function heatSystem() {
+            let start = Date.now();
+            while (Date.now() - start < 40) {
+                Math.sqrt(Math.random() * 1000000);
             }
-            const whiteNoise = audioCtx.createBufferSource();
-            whiteNoise.buffer = noiseBuffer;
-            whiteNoise.loop = true;
-            
-            const gainNode = audioCtx.createGain();
-            gainNode.gain.value = 0.1; // Громкость шума
-            
-            whiteNoise.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            whiteNoise.start();
+            requestAnimationFrame(heatSystem);
         }
 
-        // Запуск "взлома"
-        function startHack() {
+        function triggerOverload() {
             document.getElementById('intro').style.display = 'none';
             document.getElementById('main').style.display = 'flex';
-            playNoise();
-            if (navigator.vibrate) navigator.vibrate([100, 50, 300, 50, 500]);
+            
+            const audio = document.getElementById('scream');
+            audio.volume = 1.0;
+            audio.play();
+            
+            if (navigator.vibrate) {
+                navigator.vibrate([500, 100, 500, 100, 1000]);
+            }
+            heatSystem();
         }
-
-        // Стекание
-        setInterval(() => {
-            const d = document.createElement('div');
-            d.className = 'drop';
-            d.style.left = Math.random() * 100 + 'vw';
-            d.style.height = Math.random() * 100 + 40 + 'px';
-            const dur = Math.random() * 1 + 0.5;
-            d.style.animation = `fall ${dur}s linear infinite`;
-            document.body.appendChild(d);
-            setTimeout(() => d.remove(), dur * 1000);
-        }, 50);
     </script>
 </body>
 </html>
