@@ -3,78 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>fellcurse // terminal</title>
+    <title>fellcurse</title>
     <style>
-        body {
-            background-color: #0a0a0a;
-            color: #00ff66;
-            font-family: 'Courier New', Courier, monospace;
-            padding: 20px;
+        * {
+            box-sizing: border-box;
             margin: 0;
-            line-height: 1.6;
+            padding: 0;
         }
-        .terminal {
-            max-width: 800px;
-            margin: 0 auto;
+
+        body {
             background-color: #000000;
-            border: 1px solid #00ff66;
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+            color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
-            border-radius: 5px;
         }
-        .header {
-            border-bottom: 1px solid #00ff66;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            color: #00cc55;
-            font-size: 0.9em;
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            min-height: 400px;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        h1 {
-            font-size: 1.8em;
-            margin: 0 0 10px 0;
-            text-shadow: 0 0 5px rgba(0, 255, 102, 0.5);
+
+        .active {
+            display: flex;
         }
-        .bio-section {
-            margin-bottom: 30px;
+
+        .text-block {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            letter-spacing: 0.5px;
         }
-        .essay-section {
-            border-top: 1px dashed #00ff66;
-            padding-top: 20px;
-            color: #88ffaa;
+
+        .text-line {
+            opacity: 0;
+            transform: translateY(5px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            margin-bottom: 25px;
         }
-        .blink {
-            animation: blinker 1s linear infinite;
+
+        .text-line.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
-        @keyframes blinker {
-            50% { opacity: 0; }
+
+        .btn-next {
+            align-self: flex-end;
+            background: transparent;
+            border: 1px solid #ffffff;
+            color: #ffffff;
+            padding: 8px 20px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .btn-next.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .btn-next:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .links-block {
+            margin-top: 35px;
+        }
+
+        .contact-item {
+            display: block;
+            color: #ffffff;
+            text-decoration: none;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            width: fit-content;
+        }
+
+        .contact-item:hover {
+            text-decoration: underline;
+        }
+
+        .meta-note {
+            font-size: 0.8rem;
+            color: #444444;
+            margin-top: 40px;
         }
     </style>
 </head>
 <body>
 
-<div class="terminal">
-    <div class="header">
-        [SYSTEM STATUS: ONLINE] // USER: fellcurse // HOST: localhost
+    <div class="container active" id="page1">
+        <div class="text-block" id="typing-container">
+            </div>
+        <button class="btn-next" id="next-btn" onclick="nextPage()">Далее</button>
     </div>
 
-    <div class="bio-section">
-        <h1>> WHOAMI</h1>
-        <p>Привет. Я fellcurse. Интересуюсь устройством операционных систем, сетевой архитектурой, анализом трафика и тем, как работают цифровые системы изнутри, когда никто не видит.</p>
-        <p>Изучаю ИБ, копаюсь в консоли, тестирую софт на прочность. Этот сайт — мой личный цифровой след.</p>
+    <div class="container" id="page2">
+        <div class="text-block">
+            <div style="font-weight: bold; margin-bottom: 20px; font-size: 1.4rem;">fellcurse</div>
+            <p style="margin-bottom: 20px;">Специализация: аудит безопасности, удержание доступа (backdoors), анализ уязвимостей и перераспределение сетевых потоков в коммерческих системах.</p>
+            <p style="color: #888888; font-size: 1rem;">Проект развернут на платформе GitHub Pages в минимальные сроки, без упора на визуальную составляющую. Приоритет отдан функционалу и содержанию.</p>
+            
+            <div class="links-block">
+                <a href="https://t.me/indlendd" target="_blank" class="contact-item">tg: @indlendd</a>
+                <a href="https://instagram.com/moyra_atrooo" target="_blank" class="contact-item">in: @moyra_atrooo</a>
+            </div>
+        </div>
+        <div class="meta-note">
+            [github_hosted_entrypoint] // status: active
+        </div>
     </div>
 
-    <div class="essay-section">
-        <h2>> РАЗМЫШЛЕНИЯ // НАБЛЮДЕНИЯ</h2>
-        
-        <p><strong>Запись #01: Цифровая иллюзия контроля</strong></p>
-        <p>Мы привыкли думать, что управляем своими жизнями, нажимая на кнопки глянцевых экранов. Но на самом деле мы лишь потребители интерфейсов, которые для нас заботливо нарисовали. Настоящая реальность скрыта глубже — в бесконечных логах, пакетах данных и алгоритмах, которые определяют, что мы увидим в следующую секунду. Кто здесь настоящий хозяин: тот, кто кликает по иконке, или тот, кто понимает, как этот клик обрабатывается на уровне ядра системы?</p>
-        
-    </div>
+    <script>
+        // Текст первой страницы, разбитый по строкам
+        const lines = [
+            "Большинство людей уверены, что приватность — это их базовое право. Это опасное заблуждение. В цифровой среде безопасность существует лишь до тех пор, пока ваша система никому не интересна.",
+            "Настоящий контроль незаметен. Вы можете продолжать двигать курсором, открывать вкладки и думать, что полностью управляете процессом. Но пока вы читаете эти строки, в фоне уже работают механизмы, о существовании которых вы даже не догадываетесь.",
+            "Каждое действие оставляет след. Каждое соединение можно перехватить. Вопрос не в том, уязвимы ли вы. Вопрос лишь в том, сколько времени потребуется на полный сбор ваших данных."
+        ];
 
-    <div class="footer">
-        <p>> root@fellcurse:~# <span class="blink">_</span></p>
-    </div>
-</div>
+        const container = document.getElementById('typing-container');
+        const nextBtn = document.getElementById('next-btn');
+        let currentLine = 0;
 
+        function showNextLine() {
+            if (currentLine < lines.length) {
+                const p = document.createElement('p');
+                p.className = 'text-line';
+                p.textContent = lines[currentLine];
+                container.appendChild(p);
+                
+                // Небольшой таймаут для плавного появления
+                setTimeout(() => {
+                    p.classList.add('visible');
+                    currentLine++;
+                    // Задержка перед выводом следующей строки (1.5 секунды)
+                    setTimeout(showNextLine, 1500);
+                }, 100);
+            } else {
+                // Показываем кнопку "Далее", когда весь текст вывелся
+                nextBtn.classList.add('visible');
+            }
+        }
+
+        // Запуск анимации при загрузке
+        window.onload = () => {
+            setTimeout(showNextLine, 500);
+        };
+
+        function nextPage() {
+            document.getElementById('page1').classList.remove('active');
+            document.getElementById('page2').classList.add('active');
+        }
+    </script>
 </body>
-</html>\
+</html>
