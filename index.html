@@ -15,22 +15,21 @@
             background-color: #000000;
             color: #ffffff;
             font-family: 'Courier New', Courier, monospace;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            overflow: hidden;
+            padding: 40px 20px; /* Увеличили отступы, чтобы контент не прилипал к краям экрана */
+            overflow-x: hidden;
         }
 
         .container {
             width: 100%;
-            max-width: 750px;
-            min-height: 450px;
+            max-width: 700px;
             display: none;
             flex-direction: column;
-            justify-content: space-between;
-            position: relative;
+            /* Убрали жесткую min-height, теперь контейнер подстраивается под текст */
+            background-color: #000000;
         }
 
         .active {
@@ -56,17 +55,19 @@
             transform: translateY(0);
         }
 
+        /* КНОПКА ТЕПЕРЬ ВСЕГДА ПОД ТЕКСТОМ */
         .btn-next {
-            align-self: flex-end;
+            align-self: flex-start; /* Выравнивание по левому краю (стильно для консоли) или смени на flex-end */
             background: transparent;
             border: 1px solid #ffffff;
             color: #ffffff;
-            padding: 8px 20px;
+            padding: 10px 25px;
             font-family: inherit;
             font-size: 0.9rem;
             cursor: pointer;
             text-transform: uppercase;
-            transition: opacity 0.3s ease;
+            transition: all 0.2s ease;
+            margin-top: 40px; /* Жесткий контролируемый отступ сверху от текста */
             opacity: 0;
             pointer-events: none;
             z-index: 10;
@@ -105,6 +106,7 @@
             margin-top: 40px;
             border-top: 1px dashed #222222;
             padding-top: 15px;
+            width: 100%;
         }
 
         /* АНИМАЦИЯ МЕРЦАНИЯ ДЛЯ 5 СТРАНИЦЫ */
@@ -129,15 +131,26 @@
         .alert-text {
             color: #ff0000;
             font-weight: bold;
-            margin-top: 30px;
+            margin-top: 35px;
             font-size: 1.3rem;
             letter-spacing: 2px;
+            line-height: 1.5;
         }
 
         .log-line {
             font-size: 0.95rem;
             color: #888888;
             margin-bottom: 5px;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 15px;
+            line-height: 1.8;
+        }
+        
+        li {
+            margin-bottom: 8px;
         }
     </style>
 </head>
@@ -151,7 +164,7 @@
     <div class="container" id="page2">
         <div class="text-block">
             <div style="font-weight: bold; margin-bottom: 20px; font-size: 1.4rem;">fellcurse</div>
-            <p style="margin-bottom: 20px;">Специализация: аудит безопасности, анализ сетевой инфраструктуры, исследование уязвимостей периметра и конфигурации систем.</p>
+            <p>Специализация: аудит безопасности, анализ сетевой инфраструктуры, исследование уязвимостей периметра и конфигурации систем.</p>
             
             <div class="links-block">
                 <a href="https://t.me/indlendd" target="_blank" class="contact-item">tg: @indlendd</a>
@@ -166,7 +179,7 @@
             <div style="font-weight: bold; margin-bottom: 20px; font-size: 1.4rem;">[03 // Механика]</div>
             <p>Любая защита строится людьми, а людям свойственно ошибаться. Уязвимость — это не всегда баг в коде. Чаще всего это излишняя уверенность администраторов в неуязвимости своего периметра.</p>
             
-            <ul style="margin-left: 20px; margin-top: 15px; line-height: 1.8;">
+            <ul>
                 <li><strong>Разведка:</strong> Поиск открытых портов, пассивный анализ пакетов и фиксация структуры узлов.</li>
                 <li><strong>Анализ:</strong> Определение критических ошибок авторизации и дефектов в правах доступа (GPO).</li>
                 <li><strong>Фиксация:</strong> Мониторинг слабых мест инфраструктуры до момента исправления конфигурации.</li>
@@ -179,11 +192,11 @@
         <div class="text-block">
             <div style="font-weight: bold; margin-bottom: 25px; font-size: 1.4rem;">[target // network_infrastructure]</div>
             <p style="margin-bottom: 20px;"><span style="color: #666666;">Направление:</span> Интеграция систем мониторинга, стресс-тестирование UNIX/Windows сред, симуляция векторов внутренних угроз.</p>
-            <p style="margin-bottom: 15px;"><span style="color: #666666;">Задачи исследования:</span></p>
-            <ul style="margin-left: 20px; line-height: 1.6;">
-                <li style="margin-bottom: 8px;">Тестирование устойчивости шлюзов к аномальным всплескам трафика.</li>
-                <li style="margin-bottom: 8px;">Анализ изоляции виртуальных сетей (VLAN) внутри коммерческих объектов.</li>
-                <li style="margin-bottom: 8px;">Оценка эффективности систем обнаружения сетевых вторжений (IDS).</li>
+            <p style="margin-bottom: 5px;"><span style="color: #666666;">Задачи исследования:</span></p>
+            <ul>
+                <li>Тестирование устойчивости шлюзов к аномальным всплескам трафика.</li>
+                <li>Анализ изоляции виртуальных сетей (VLAN) внутри коммерческих объектов.</li>
+                <li>Оценка эффективности систем обнаружения сетевых вторжений (IDS).</li>
             </ul>
         </div>
         <button class="btn-next visible" onclick="triggerFinalPage()">Далее</button>
@@ -192,8 +205,8 @@
     <div class="container" id="page5">
         <div class="text-block" id="log-container">
             <div style="font-weight: bold; margin-bottom: 15px;">[system_log // security_event]</div>
-            </div>
-        <div class="meta-note" id="final-status" style="border: none; text-align: center;">
+        </div>
+        <div class="meta-note" id="final-status" style="text-align: center;">
             [processing]
         </div>
     </div>
@@ -240,6 +253,7 @@
         function changePage(hideId, showId) {
             document.getElementById(hideId).classList.remove('active');
             document.getElementById(showId).classList.add('active');
+            window.scrollTo(0, 0); /* Сбрасываем скролл вверх при переходе */
         }
 
         function triggerFinalPage() {
@@ -265,7 +279,6 @@
                     printLogs(index + 1);
                 }, 250);
             } else {
-                // Конечный вывод
                 const alertDiv = document.createElement('div');
                 alertDiv.className = 'alert-text';
                 alertDiv.innerHTML = 'КОНЕЦ СТРАНИЦ<br>[ СИСТЕМА ЗАБЛОКИРОВАНА ]';
