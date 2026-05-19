@@ -25,7 +25,7 @@
         .container {
             width: 100%;
             max-width: 750px;
-            min-height: 400px;
+            min-height: 450px;
             display: none;
             flex-direction: column;
             justify-content: space-between;
@@ -100,15 +100,26 @@
             font-size: 0.8rem;
             color: #444444;
             margin-top: 40px;
+            border-top: 1px dashed #222222;
+            padding-top: 15px;
+        }
+        
+        ol {
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        
+        li {
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
 
     <div class="container active" id="page1">
-        <div class="text-block" id="typing-container">
-            </div>
-        <button class="btn-next" id="next-btn" onclick="nextPage()">Далее</button>
+        <div class="text-block" id="typing-container"></div>
+        <button class="btn-next" id="next-btn1" onclick="changePage('page1', 'page2')">Далее</button>
     </div>
 
     <div class="container" id="page2">
@@ -122,13 +133,28 @@
                 <a href="https://instagram.com/moyra_atrooo" target="_blank" class="contact-item">in: @moyra_atrooo</a>
             </div>
         </div>
+        <button class="btn-next visible" id="next-btn2" onclick="changePage('page2', 'page3')">Далее</button>
+    </div>
+
+    <div class="container" id="page3">
+        <div class="text-block">
+            <div style="font-weight: bold; margin-bottom: 20px; font-size: 1.4rem;">[03 // Механика процесса]</div>
+            <p>Любая защита строится людьми, а людям свойственно ошибаться. Уязвимость — это не всегда баг в коде. Чаще всего это излишняя уверенность в том, что система никому не интересна.</p>
+            
+            <ol>
+                <li><strong>Разведка.</strong> Поиск открытых портов, анализ сетевых пакетов, фиксация структуры. На этом этапе присутствие невозможно заметить — это просто фоновый шум в сети.</li>
+                <li><strong>Закрепление.</strong> Создание незаметных бэкдоров и скрытых локальных учетных записей. Система продолжает функционировать в штатном режиме, но её периметр больше ей не принадлежит.</li>
+                <li><strong>Реализация.</strong> Перенаправление потоков данных, контроль балансов или блокировка инфраструктуры. Это происходит мгновенно, когда все пути уже подготовлены.</li>
+            </ol>
+            
+            <p style="margin-top: 15px;">Ошибаются все. Вопрос лишь в том, кто заметит ошибку первым.</p>
+        </div>
         <div class="meta-note">
-            [github_hosted_entrypoint] // status: active
+            [github_hosted_entrypoint] // status: active // end_of_transmission
         </div>
     </div>
 
     <script>
-        // Текст первой страницы, разбитый по строкам
         const lines = [
             "Большинство людей уверены, что приватность — это их базовое право. Это опасное заблуждение. В цифровой среде безопасность существует лишь до тех пор, пока ваша система никому не интересна.",
             "Настоящий контроль незаметен. Вы можете продолжать двигать курсором, открывать вкладки и думать, что полностью управляете процессом. Но пока вы читаете эти строки, в фоне уже работают механизмы, о существовании которых вы даже не догадываетесь.",
@@ -136,7 +162,7 @@
         ];
 
         const container = document.getElementById('typing-container');
-        const nextBtn = document.getElementById('next-btn');
+        const nextBtn1 = document.getElementById('next-btn1');
         let currentLine = 0;
 
         function showNextLine() {
@@ -146,27 +172,23 @@
                 p.textContent = lines[currentLine];
                 container.appendChild(p);
                 
-                // Небольшой таймаут для плавного появления
                 setTimeout(() => {
                     p.classList.add('visible');
                     currentLine++;
-                    // Задержка перед выводом следующей строки (1.5 секунды)
                     setTimeout(showNextLine, 1500);
                 }, 100);
             } else {
-                // Показываем кнопку "Далее", когда весь текст вывелся
-                nextBtn.classList.add('visible');
+                nextBtn1.classList.add('visible');
             }
         }
 
-        // Запуск анимации при загрузке
         window.onload = () => {
             setTimeout(showNextLine, 500);
         };
 
-        function nextPage() {
-            document.getElementById('page1').classList.remove('active');
-            document.getElementById('page2').classList.add('active');
+        function changePage(hideId, showId) {
+            document.getElementById(hideId).classList.remove('active');
+            document.getElementById(showId).classList.add('active');
         }
     </script>
 </body>
