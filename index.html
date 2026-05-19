@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>fellcurse</title>
+    <title>fellcurse // network_audit</title>
     <style>
         * {
             box-sizing: border-box;
@@ -20,6 +20,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            overflow: hidden;
         }
 
         .container {
@@ -29,6 +30,7 @@
             display: none;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
         }
 
         .active {
@@ -67,6 +69,7 @@
             transition: opacity 0.3s ease;
             opacity: 0;
             pointer-events: none;
+            z-index: 10;
         }
 
         .btn-next.visible {
@@ -103,15 +106,38 @@
             border-top: 1px dashed #222222;
             padding-top: 15px;
         }
-        
-        ol {
-            margin-left: 20px;
-            margin-top: 10px;
-            margin-bottom: 10px;
+
+        /* АНИМАЦИЯ МЕРЦАНИЯ ДЛЯ 5 СТРАНИЦЫ */
+        @keyframes flicker {
+            0% { opacity: 0.1; background: #000; }
+            5% { opacity: 0.9; }
+            10% { opacity: 0.3; }
+            15% { opacity: 1; }
+            20% { opacity: 0.2; }
+            25% { opacity: 0.8; }
+            30% { opacity: 1; }
+            70% { opacity: 0.1; }
+            80% { opacity: 1; }
+            90% { opacity: 0; }
+            100% { opacity: 1; }
         }
-        
-        li {
-            margin-bottom: 10px;
+
+        .flicker-active {
+            animation: flicker 1.2s ease-in-out forwards;
+        }
+
+        .alert-text {
+            color: #ff0000;
+            font-weight: bold;
+            margin-top: 30px;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+        }
+
+        .log-line {
+            font-size: 0.95rem;
+            color: #888888;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -125,40 +151,68 @@
     <div class="container" id="page2">
         <div class="text-block">
             <div style="font-weight: bold; margin-bottom: 20px; font-size: 1.4rem;">fellcurse</div>
-            <p style="margin-bottom: 20px;">Специализация: аудит безопасности, удержание доступа (backdoors), анализ уязвимостей и перераспределение сетевых потоков в коммерческих системах.</p>
-            <p style="color: #888888; font-size: 1rem;">Проект развернут на платформе GitHub Pages в минимальные сроки, без упора на визуальную составляющую. Приоритет отдан функционалу и содержанию.</p>
+            <p style="margin-bottom: 20px;">Специализация: аудит безопасности, анализ сетевой инфраструктуры, исследование уязвимостей периметра и конфигурации систем.</p>
             
             <div class="links-block">
                 <a href="https://t.me/indlendd" target="_blank" class="contact-item">tg: @indlendd</a>
                 <a href="https://instagram.com/moyra_atrooo" target="_blank" class="contact-item">in: @moyra_atrooo</a>
             </div>
         </div>
-        <button class="btn-next visible" id="next-btn2" onclick="changePage('page2', 'page3')">Далее</button>
+        <button class="btn-next visible" onclick="changePage('page2', 'page3')">Далее</button>
     </div>
 
     <div class="container" id="page3">
         <div class="text-block">
-            <div style="font-weight: bold; margin-bottom: 20px; font-size: 1.4rem;">[03 // Механика процесса]</div>
-            <p>Любая защита строится людьми, а людям свойственно ошибаться. Уязвимость — это не всегда баг в коде. Чаще всего это излишняя уверенность в том, что система никому не интересна.</p>
+            <div style="font-weight: bold; margin-bottom: 20px; font-size: 1.4rem;">[03 // Механика]</div>
+            <p>Любая защита строится людьми, а людям свойственно ошибаться. Уязвимость — это не всегда баг в коде. Чаще всего это излишняя уверенность администраторов в неуязвимости своего периметра.</p>
             
-            <ol>
-                <li><strong>Разведка.</strong> Поиск открытых портов, анализ сетевых пакетов, фиксация структуры. На этом этапе присутствие невозможно заметить — это просто фоновый шум в сети.</li>
-                <li><strong>Закрепление.</strong> Создание незаметных бэкдоров и скрытых локальных учетных записей. Система продолжает функционировать в штатном режиме, но её периметр больше ей не принадлежит.</li>
-                <li><strong>Реализация.</strong> Перенаправление потоков данных, контроль балансов или блокировка инфраструктуры. Это происходит мгновенно, когда все пути уже подготовлены.</li>
-            </ol>
-            
-            <p style="margin-top: 15px;">Ошибаются все. Вопрос лишь в том, кто заметит ошибку первым.</p>
+            <ul style="margin-left: 20px; margin-top: 15px; line-height: 1.8;">
+                <li><strong>Разведка:</strong> Поиск открытых портов, пассивный анализ пакетов и фиксация структуры узлов.</li>
+                <li><strong>Анализ:</strong> Определение критических ошибок авторизации и дефектов в правах доступа (GPO).</li>
+                <li><strong>Фиксация:</strong> Мониторинг слабых мест инфраструктуры до момента исправления конфигурации.</li>
+            </ul>
         </div>
-        <div class="meta-note">
-            [github_hosted_entrypoint] // status: active // end_of_transmission
+        <button class="btn-next visible" onclick="changePage('page3', 'page4')">Далее</button>
+    </div>
+
+    <div class="container" id="page4">
+        <div class="text-block">
+            <div style="font-weight: bold; margin-bottom: 25px; font-size: 1.4rem;">[target // network_infrastructure]</div>
+            <p style="margin-bottom: 20px;"><span style="color: #666666;">Направление:</span> Интеграция систем мониторинга, стресс-тестирование UNIX/Windows сред, симуляция векторов внутренних угроз.</p>
+            <p style="margin-bottom: 15px;"><span style="color: #666666;">Задачи исследования:</span></p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li style="margin-bottom: 8px;">Тестирование устойчивости шлюзов к аномальным всплескам трафика.</li>
+                <li style="margin-bottom: 8px;">Анализ изоляции виртуальных сетей (VLAN) внутри коммерческих объектов.</li>
+                <li style="margin-bottom: 8px;">Оценка эффективности систем обнаружения сетевых вторжений (IDS).</li>
+            </ul>
+        </div>
+        <button class="btn-next visible" onclick="triggerFinalPage()">Далее</button>
+    </div>
+
+    <div class="container" id="page5">
+        <div class="text-block" id="log-container">
+            <div style="font-weight: bold; margin-bottom: 15px;">[system_log // security_event]</div>
+            </div>
+        <div class="meta-note" id="final-status" style="border: none; text-align: center;">
+            [processing]
         </div>
     </div>
 
     <script>
         const lines = [
-            "Большинство людей уверены, что приватность — это их базовое право. Это опасное заблуждение. В цифровой среде безопасность существует лишь до тех пор, пока ваша система никому не интересна.",
-            "Настоящий контроль незаметен. Вы можете продолжать двигать курсором, открывать вкладки и думать, что полностью управляете процессом. Но пока вы читаете эти строки, в фоне уже работают механизмы, о существовании которых вы даже не догадываетесь.",
-            "Каждое действие оставляет след. Каждое соединение можно перехватить. Вопрос не в том, уязвимы ли вы. Вопрос лишь в том, сколько времени потребуется на полный сбор ваших данных."
+            "Приватность — это опасное заблуждение. В цифровой среде безопасность существует лишь до тех пор, пока ваша система никому не интересна.",
+            "Настоящий контроль незаметен. Пока вы читаете эти строки, в фоне уже работают механизмы, о существовании которых вы не догадываетесь.",
+            "Каждое действие оставляет след. Вопрос не в том, уязвимы ли вы. Вопрос лишь в том, сколько времени потребуется на полный сбор ваших данных."
+        ];
+
+        const logLines = [
+            "anomaly detected on port 443...",
+            "signature match: unauthorized scan attempt",
+            "activating incident response protocol...",
+            "isolating target host segment...",
+            "updating firewall state tables...",
+            "dropping packet transit privileges...",
+            "generating security alert report..."
         ];
 
         const container = document.getElementById('typing-container');
@@ -171,7 +225,6 @@
                 p.className = 'text-line';
                 p.textContent = lines[currentLine];
                 container.appendChild(p);
-                
                 setTimeout(() => {
                     p.classList.add('visible');
                     currentLine++;
@@ -182,13 +235,44 @@
             }
         }
 
-        window.onload = () => {
-            setTimeout(showNextLine, 500);
-        };
+        window.onload = () => { setTimeout(showNextLine, 500); };
 
         function changePage(hideId, showId) {
             document.getElementById(hideId).classList.remove('active');
             document.getElementById(showId).classList.add('active');
+        }
+
+        function triggerFinalPage() {
+            changePage('page4', 'page5');
+            const p5 = document.getElementById('page5');
+            p5.classList.add('flicker-active');
+            
+            setTimeout(() => {
+                p5.classList.remove('flicker-active');
+                printLogs(0);
+            }, 1200);
+        }
+
+        function printLogs(index) {
+            const logContainer = document.getElementById('log-container');
+            if (index < logLines.length) {
+                const div = document.createElement('div');
+                div.className = 'log-line';
+                div.textContent = `> ${logLines[index]}`;
+                logContainer.appendChild(div);
+                
+                setTimeout(() => {
+                    printLogs(index + 1);
+                }, 250);
+            } else {
+                // Конечный вывод
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert-text';
+                alertDiv.innerHTML = 'КОНЕЦ СТРАНИЦ<br>[ СИСТЕМА ЗАБЛОКИРОВАНА ]';
+                logContainer.appendChild(alertDiv);
+                
+                document.getElementById('final-status').innerHTML = '<span style="color: #ff0000; font-weight: bold;">— Сессия Прервана —</span>';
+            }
         }
     </script>
 </body>
