@@ -179,4 +179,132 @@
 
         </div>
     </main>
-    
+        <script>
+        const database = [
+            // --- БАЗА ---
+            { cat: "база", title: "Что вообще такое Трейдинг?", text: "Трейдинг — это заработок на разнице цен. Купить дешевле, продать дороже (Лонг). Или продать дорого, откупить дешевле (Шорт). Это не казино. Это математика, где ты ищешь ситуации, в которых вероятность движения цены в твою сторону выше.", risk: "var(--accent)" },
+            { cat: "база", title: "Спот vs Фьючерсы", text: "Спот — реальная покупка монеты на кошелек. Фьючерсы (деривативы) — ставки на цену. На фьючерсах можно брать кредитное плечо и шортить, но именно там новички теряют 100% депозита из-за ликвидаций.", risk: "var(--accent)" },
+            { cat: "база", title: "Маркетмейкер (Кит)", text: "Крупные фонды и банки, обладающие миллиардами долларов. Они создают ликвидность на рынке. Твоя задача как трейдера — не пытаться бороться с ними, а научиться видеть их следы на графике и двигаться вместе с ними.", risk: "var(--accent)" },
+            { cat: "база", title: "Доминация Биткоина (BTC.D)", text: "Процент капитала всего крипторынка, который находится в Биткоине. Если доминация растет, BTC высасывает ликвидность из альткоинов (они падают). Если падает — ликвидность перетекает в альты.", risk: "var(--accent)" },
+            { cat: "база", title: "Что такое Альтсезон?", text: "Момент эйфории на рынке, когда Биткоин уходит во флэт (боковик), а инвесторы переливают прибыль в мелкие монеты. Именно в этот период альткоины стреляют на x10-x50.", risk: "var(--accent)" },
+            { cat: "база", title: "Токеномика (Анлоки)", text: "Прежде чем покупать альткоин в долгосрок, изучи его анлоки. Если в следующем месяце разработчики разблокируют 20% всех монет проекта и продадут их в рынок, цена рухнет, и никакой теханализ тебя не спасет.", risk: "var(--red)" },
+
+            // --- ТЕХАНАЛИЗ ---
+            { cat: "теханализ", title: "Японские свечи", text: "Свеча показывает движение цены за выбранное время. Длинные 'хвосты' (тени) снизу говорят о том, что покупатели агрессивно откупили падение цены. Это первый сигнал к развороту.", risk: "var(--blue)" },
+            { cat: "теханализ", title: "Ордер Блок (Order Block)", text: "Свеча, в которой Кит влил огромный объем денег, чтобы развернуть тренд. В этом месте остаются 'лимитные ордера'. Когда цена возвращается к Ордер Блоку, происходит реакция — это идеальная точка для входа.", risk: "var(--blue)" },
+            { cat: "теханализ", title: "FVG (Имбаланс)", text: "Fair Value Gap. Пустота на графике, оставленная мощным импульсным движением, где покупатели и продавцы не успели 'договориться' о цене. Рынок работает как магнит и всегда возвращается, чтобы перекрыть этот FVG.", risk: "var(--blue)" },
+            { cat: "теханализ", title: "Сбор Ликвидности (Sweep)", text: "Когда цена чуть-чуть пробивает важный уровень, собирает там стоп-лоссы толпы и резко разворачивается обратно. Это ложный пробой, который Киты используют для набора своей позиции.", risk: "var(--blue)" },
+            { cat: "теханализ", title: "Торговые объемы (Volume)", text: "Любое движение цены должно подтверждаться объемами. Если цена растет, а объемы покупок падают — это ложный рост, скоро будет падение. Крупного игрока всегда видно по объемам внизу графика.", risk: "var(--blue)" },
+            { cat: "теханализ", title: "Скользящие средние (EMA)", text: "Линии на графике, показывающие среднюю цену. EMA 200 на дневном графике — это компас рынка. Если цена выше EMA 200, мы в глобальном бычьем рынке (ищем только лонги). Если ниже — медвежка.", risk: "var(--blue)" },
+            { cat: "теханализ", title: "BOS и CHoCH", text: "BOS (Break of Structure) — пробой структуры по тренду. Подтверждает, что тренд продолжается. CHoCH (Change of Character) — смена характера рынка, сигнализирующая о развороте тренда.", risk: "var(--blue)" },
+
+            // --- РИСК-МЕНЕДЖМЕНТ ---
+            { cat: "риск", title: "Золотое правило 1%", text: "Твой Стоп-Лосс не должен превышать 1-2% от всего капитала. Если у тебя $1000, ты рискуешь максимум $10 в сделке. Даже 10 минусов подряд заберут лишь 10% депо. Ты останешься в игре.", risk: "var(--green)" },
+            { cat: "риск", title: "Risk / Reward (R:R)", text: "Отношение риска к прибыли. Если ты рискуешь $10, чтобы заработать $30 — твой R:R равен 1:3. При таком соотношении тебе достаточно выигрывать всего 3 сделки из 10, чтобы быть в плюсе на дистанции.", risk: "var(--green)" },
+            { cat: "риск", title: "Усреднение (Доливка в минус)", text: "Самая смертельная ошибка. Когда цена идет против тебя, а ты докупаешь еще, надеясь, что 'сейчас развернется'. Это прямой путь к ликвидации. Убыточную сделку нужно резать сразу по Стопу.", risk: "var(--red)" },
+            { cat: "риск", title: "Перевод в БУ (Безубыток)", text: "Перенос твоего Стоп-Лосса на цену входа, когда сделка уже идет в хороший плюс. Это делает сделку бесплатной. Главное правило: не давай прибыльной сделке превратиться в убыточную.", risk: "var(--green)" },
+            { cat: "риск", title: "Частичная фиксация", text: "Никогда не жадничай. Цена прошла полпути до твоего Тейк-Профита? Закрой 50% сделки, а остаток оставь расти. Так ты уже зафиксировал прибыль на свой счет.", risk: "var(--green)" },
+            { cat: "риск", title: "Кредитное плечо — это иллюзия", text: "Плечо не делает тебя богаче, оно лишь позволяет открыть сделку с меньшим обеспечением. Риск контролируется не плечом, а размером твоего Стоп-Лосса.", risk: "var(--red)" },
+            { cat: "риск", title: "Дневной лимит потерь", text: "Установи жесткое правило: 'Если я ловлю 3 Стоп-Лосса за день, я закрываю терминал до завтра'. Это защитит тебя от тильта и потери всего депозита на эмоциях.", risk: "var(--green)" },
+
+            // --- ПСИХОЛОГИЯ ---
+            { cat: "психология", title: "Синдром FOMO", text: "Страх упущенной выгоды. Ты залетаешь в улетевшую ракету (огромную зеленую свечу), боясь не успеть. В 90% случаев ты покупаешь на самом пике перед жестким откатом.", risk: "var(--green)" },
+            { cat: "психология", title: "Овертрейдинг", text: "Желание постоянно находиться в сделке. Рынок не дает хороших сетапов каждый час. Иногда лучшая позиция — это сидеть на заборе с долларами (USDT) и просто наблюдать.", risk: "var(--red)" },
+            { cat: "психология", title: "Месть рынку", text: "Ты получил стоп-лосс. Злишься и тут же открываешь сделку в обратную сторону удвоенным объемом, чтобы 'отбить минус'. Это гарантия слива депозита. Ошибся? Отойди от экрана.", risk: "var(--red)" },
+            { cat: "психология", title: "Дневник трейдера", text: "Если ты не записываешь свои сделки (почему зашел, какие эмоции испытывал, где вышел), ты не трейдер, а гемблер (игрок). Без дневника невозможно улучшить стратегию.", risk: "var(--green)" },
+            { cat: "психология", title: "Аналитический паралич", text: "Ты накинул на график 15 индикаторов, RSI, MACD и уровни. Один индикатор говорит лонг, другой — шорт. В итоге ты в ступоре. График должен быть чистым. Price Action — основа всего.", risk: "var(--green)" }
+        ];
+
+        let currentData = [...database];
+        let currentIndex = 0;
+        
+        const authScreen = document.getElementById('auth-screen');
+        const appScreen = document.getElementById('app-screen');
+        const layer = document.getElementById('transition-layer');
+        
+        const dataCard = document.getElementById('data-card');
+        const premiumCard = document.getElementById('premium-card');
+        const controls = document.getElementById('controls');
+
+        const indicator = document.getElementById('risk-indicator');
+        const catEl = document.getElementById('data-category');
+        const titleEl = document.getElementById('data-title');
+        const textEl = document.getElementById('data-text');
+        const counterEl = document.getElementById('counter');
+        const tabs = document.querySelectorAll('.tab');
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                authScreen.style.opacity = '0';
+                setTimeout(() => {
+                    layer.classList.add('active');
+                    setTimeout(() => {
+                        authScreen.style.display = 'none';
+                        appScreen.classList.add('active');
+                        updateDisplay(0);
+                        layer.classList.remove('active');
+                    }, 1000);
+                }, 500);
+            }, 1500);
+        });
+
+        function updateDisplay(index) {
+            if (currentData.length === 0) return;
+            currentIndex = index;
+            
+            dataCard.style.transform = 'translateY(15px) scale(0.98)';
+            dataCard.style.opacity = '0';
+
+            setTimeout(() => {
+                const item = currentData[currentIndex];
+                indicator.style.background = item.risk;
+                catEl.innerText = `// ${item.cat}`;
+                titleEl.innerText = item.title;
+                textEl.innerText = item.text;
+                
+                counterEl.innerText = `${String(currentIndex + 1).padStart(2, '0')} / ${String(currentData.length).padStart(2, '0')}`;
+                
+                dataCard.style.transform = 'translateY(0) scale(1)';
+                dataCard.style.opacity = '1';
+                
+                // Скролл текста наверх при смене карточки
+                textEl.scrollTop = 0;
+            }, 300);
+        }
+
+        document.getElementById('next-btn').addEventListener('click', () => {
+            if (currentData.length > 0) updateDisplay((currentIndex + 1) % currentData.length);
+        });
+
+        document.getElementById('prev-btn').addEventListener('click', () => {
+            if (currentData.length > 0) updateDisplay((currentIndex - 1 + currentData.length) % currentData.length);
+        });
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                tabs.forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+
+                const category = e.target.getAttribute('data-category');
+                
+                if (category === 'premium') {
+                    dataCard.style.display = 'none';
+                    controls.style.display = 'none';
+                    premiumCard.style.display = 'block';
+                } else {
+                    premiumCard.style.display = 'none';
+                    dataCard.style.display = 'block';
+                    controls.style.display = 'flex';
+                    
+                    if (category === 'all') {
+                        currentData = [...database];
+                    } else {
+                        currentData = database.filter(item => item.cat === category);
+                    }
+                    updateDisplay(0);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
