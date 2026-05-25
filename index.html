@@ -119,3 +119,64 @@
         .btn-navsvg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; }
     </style>
 </head>
+<body>
+
+    <div class="transition-layer" id="transition-layer"><div class="spinner"></div></div>
+
+    <header>
+        <div class="logo">INDLENDD<span>corp</span></div>
+        <div class="author">By <a href="https://t.me/indlendd" target="_blank">@indlendd</a></div>
+    </header>
+
+    <main>
+        <div id="auth-screen">
+            <h1>SYSTEM INIT</h1>
+            <p>Установка защищенного соединения<br>с терминалом базы данных...</p>
+        </div>
+
+        <div id="app-screen">
+            
+            <div class="tabs" id="category-tabs">
+                <div class="tab active" data-category="all">ВСЕ</div>
+                <div class="tab" data-category="база">БАЗА</div>
+                <div class="tab" data-category="теханализ">ТЕХАНАЛИЗ</div>
+                <div class="tab" data-category="психология">ПСИХОЛОГИЯ</div>
+                <div class="tab" data-category="риск">РИСК</div>
+                <div class="tab tab-premium" data-category="premium">PRIVATE 💎</div>
+            </div>
+
+            <div class="data-card" id="data-card">
+                <div class="risk-indicator" id="risk-indicator"></div>
+                <div class="data-category" id="data-category">ИНИЦИАЛИЗАЦИЯ...</div>
+                <div class="data-title" id="data-title">Загрузка данных</div>
+                <div class="data-text" id="data-text">Пожалуйста, подождите.</div>
+            </div>
+
+            <div class="controls" id="controls">
+                <button class="btn-nav" id="prev-btn">
+                    <svg class="btn-navsvg" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <div class="counter" id="counter">01 / 00</div>
+                <button class="btn-nav" id="next-btn">
+                    <svg class="btn-navsvg" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+
+            <div class="data-card" id="premium-card">
+                <div class="premium-icon">🔒</div>
+                <div class="premium-title">PRIVATE CLUB</div>
+                <div style="color: var(--sub-text); font-size: 12px; letter-spacing: 1px; text-transform: uppercase;">Доступ закрыт</div>
+                
+                <ul class="premium-list">
+                    <li>Анонимный E-commerce: скрытые схемы дропшиппинга</li>
+                    <li>Откуда брать трафик и лидов (Мои связки)</li>
+                    <li>Где найти стартовый капитал с нуля</li>
+                    <li>Как масштабировать любой бизнес и сделать x10</li>
+                </ul>
+
+                <a href="https://t.me/indlendd" class="btn-buy" target="_blank">КУПИТЬ ДОСТУП — $20</a>
+            </div>
+
+        </div>
+    </main>
+    
