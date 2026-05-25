@@ -2,291 +2,224 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>fellcurse // network_audit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>INDLENDD CLUB</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        :root {
+            --bg: #000000;
+            --text: #ffffff;
+            --sub-text: #888888;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --accent: #ffffff; /* Белый акцент для элитарности */
+            --glass: rgba(255, 255, 255, 0.01);
+            --blur: 25px;
+            --transition-ui: cubic-bezier(0.23, 1, 0.32, 1); /* Дорогая кривая */
         }
 
         body {
-            background-color: #000000;
-            color: #ffffff;
-            font-family: 'Courier New', Courier, monospace;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px; /* Увеличили отступы, чтобы контент не прилипал к краям экрана */
-            overflow-x: hidden;
+            margin: 0; background: var(--bg); color: var(--text);
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, sans-serif;
+            overflow: hidden; height: 100vh;
+            display: flex; flex-direction: column;
+            padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
         }
 
-        .container {
-            width: 100%;
-            max-width: 700px;
-            display: none;
-            flex-direction: column;
-            /* Убрали жесткую min-height, теперь контейнер подстраивается под текст */
-            background-color: #000000;
+        /* --- Глобальная анимация затухания --- */
+        .fade-out { opacity: 0; filter: blur(10px); }
+        .transition-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 1000;
+            transition: opacity 0.8s var(--transition-ui), visibility 0.8s;
+            visibility: hidden; opacity: 0;
+        }
+        .transition-layer.active { visibility: visible; opacity: 1; }
+
+        /* --- Header: Логотип и Автор --- */
+        header {
+            position: fixed; top: env(safe-area-inset-top); left: 0; width: 100%;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 25px; box-sizing: border-box; z-index: 500;
         }
 
-        .active {
-            display: flex;
+        .logo {
+            font-size: 16px; font-weight: 900; letter-spacing: 5px; text-transform: uppercase;
+            color: var(--text); position: relative;
+        }
+        .logo::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 20px; height: 1.5px;
+            background: var(--accent);
         }
 
-        .text-block {
-            font-size: 1.15rem;
-            line-height: 1.8;
-            white-space: pre-wrap;
-            letter-spacing: 0.5px;
+        .author {
+            font-size: 10px; font-weight: 500; text-transform: uppercase;
+            color: var(--sub-text); letter-spacing: 2px;
+        }
+        .author a { color: inherit; text-decoration: none; border-bottom: 0.5px solid var(--sub-text); }
+
+        /* --- Main Content --- */
+        main {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 0 25px;
         }
 
-        .text-line {
-            opacity: 0;
-            transform: translateY(5px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-            margin-bottom: 25px;
-        }
-
-        .text-line.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* КНОПКА ТЕПЕРЬ ВСЕГДА ПОД ТЕКСТОМ */
-        .btn-next {
-            align-self: flex-start; /* Выравнивание по левому краю (стильно для консоли) или смени на flex-end */
-            background: transparent;
-            border: 1px solid #ffffff;
-            color: #ffffff;
-            padding: 10px 25px;
-            font-family: inherit;
-            font-size: 0.9rem;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.2s ease;
-            margin-top: 40px; /* Жесткий контролируемый отступ сверху от текста */
-            opacity: 0;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .btn-next.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .btn-next:hover {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        .links-block {
-            margin-top: 35px;
-        }
-
-        .contact-item {
-            display: block;
-            color: #ffffff;
-            text-decoration: none;
-            margin-bottom: 12px;
-            font-size: 1.1rem;
-            width: fit-content;
-        }
-
-        .contact-item:hover {
-            text-decoration: underline;
-        }
-
-        .meta-note {
-            font-size: 0.8rem;
-            color: #444444;
-            margin-top: 40px;
-            border-top: 1px dashed #222222;
-            padding-top: 15px;
-            width: 100%;
-        }
-
-        /* АНИМАЦИЯ МЕРЦАНИЯ ДЛЯ 5 СТРАНИЦЫ */
-        @keyframes flicker {
-            0% { opacity: 0.1; background: #000; }
-            5% { opacity: 0.9; }
-            10% { opacity: 0.3; }
-            15% { opacity: 1; }
-            20% { opacity: 0.2; }
-            25% { opacity: 0.8; }
-            30% { opacity: 1; }
-            70% { opacity: 0.1; }
-            80% { opacity: 1; }
-            90% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        .flicker-active {
-            animation: flicker 1.2s ease-in-out forwards;
-        }
-
-        .alert-text {
-            color: #ff0000;
-            font-weight: bold;
-            margin-top: 35px;
-            font-size: 1.3rem;
-            letter-spacing: 2px;
-            line-height: 1.5;
-        }
-
-        .log-line {
-            font-size: 0.95rem;
-            color: #888888;
-            margin-bottom: 5px;
+        /* --- Screen 1: Авторизация --- */
+        #auth-screen {
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            transition: opacity 0.5s var(--transition-ui), filter 0.5s var(--transition-ui);
         }
         
-        ul, ol {
-            margin-left: 20px;
-            margin-top: 15px;
-            line-height: 1.8;
+        #auth-screen h1 { font-size: 34px; font-weight: 800; margin: 0 0 10px; letter-spacing: -1px; }
+        #auth-screen p { color: var(--sub-text); font-size: 15px; margin-bottom: 30px; line-height: 1.4; }
+
+        /* --- Screen 2: Главный Контент --- */
+        #app-screen {
+            display: none; width: 100%; max-width: 400px;
+            opacity: 0; transform: translateY(20px);
+            transition: opacity 0.6s var(--transition-ui) 0.3s, transform 0.6s var(--transition-ui) 0.3s;
+        }
+        #app-screen.active { display: block; opacity: 1; transform: translateY(0); }
+
+        .advice-card {
+            background: var(--card-bg); border-radius: 35px; padding: 40px;
+            border: 0.5px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur));
+            transition: transform 0.5s var(--transition-ui);
+            min-height: 200px; display: flex; flex-direction: column; justify-content: center;
         }
         
-        li {
-            margin-bottom: 8px;
+        .advice-title {
+            color: var(--accent); font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px;
         }
+
+        .advice-text {
+            font-size: 20px; font-weight: 600; line-height: 1.5;
+            color: var(--text); text-align: left;
+        }
+
+        /* --- Кнопки Навигации --- */
+        .controls {
+            display: flex; justify-content: center; gap: 15px; margin-top: 30px;
+        }
+
+        .btn-nav {
+            display: flex; align-items: center; justify-content: center;
+            width: 55px; height: 55px; border-radius: 50%;
+            background: var(--card-bg); border: 0.5px solid rgba(255, 255, 255, 0.08);
+            color: var(--accent); transition: background 0.3s, transform 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-nav:active { background: rgba(255,255,255,0.1); transform: scale(0.95); }
+        .btn-navsvg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+
     </style>
 </head>
 <body>
 
-    <div class="container active" id="page1">
-        <div class="text-block" id="typing-container"></div>
-        <button class="btn-next" id="next-btn1" onclick="changePage('page1', 'page2')">Далее</button>
-    </div>
+    <div class="transition-layer" id="transition-layer"></div>
 
-    <div class="container" id="page2">
-        <div class="text-block">
-            <div style="font-weight: bold; margin-bottom: 20px; font-size: 1.4rem;">fellcurse</div>
-            <p>Специализация: аудит безопасности, анализ сетевой инфраструктуры, исследование уязвимостей периметра и конфигурации систем.</p>
-            
-            <div class="links-block">
-                <a href="https://t.me/indlendd" target="_blank" class="contact-item">tg: @indlendd</a>
-                <a href="https://instagram.com/moyra_atrooo" target="_blank" class="contact-item">in: @moyra_atrooo</a>
+    <header>
+        <div class="logo">INDLENDD</div>
+        <div class="author">Created @indlendd (<a href="https://t.me/indlendd" target="_blank">tg</a>)</div>
+    </header>
+
+    <main>
+        <div id="auth-screen">
+            <h1>PRIVATE INSIGHTS</h1>
+            <p>Добро пожаловать в клуб. Система выполняет<br>приватную инициализацию...</p>
+        </div>
+
+        <div id="app-screen">
+            <div class="advice-card" id="advice-card">
+                <div class="advice-title" id="advice-title">Совет #1</div>
+                <div class="advice-text" id="advice-text">Твой мозг — самый дорогой актив. Инвестируй в знания, которые приносят доллары, а не просто тенге.</div>
+            </div>
+
+            <div class="controls">
+                <button class="btn-nav" id="prev-btn">
+                    <svg class="btn-navsvg" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <button class="btn-nav" id="next-btn">
+                    <svg class="btn-navsvg" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
             </div>
         </div>
-        <button class="btn-next visible" onclick="changePage('page2', 'page3')">Далее</button>
-    </div>
-
-    <div class="container" id="page3">
-        <div class="text-block">
-            <div style="font-weight: bold; margin-bottom: 20px; font-size: 1.4rem;">[03 // Механика]</div>
-            <p>Любая защита строится людьми, а людям свойственно ошибаться. Уязвимость — это не всегда баг в коде. Чаще всего это излишняя уверенность администраторов в неуязвимости своего периметра.</p>
-            
-            <ul>
-                <li><strong>Разведка:</strong> Поиск открытых портов, пассивный анализ пакетов и фиксация структуры узлов.</li>
-                <li><strong>Анализ:</strong> Определение критических ошибок авторизации и дефектов в правах доступа (GPO).</li>
-                <li><strong>Фиксация:</strong> Мониторинг слабых мест инфраструктуры до момента исправления конфигурации.</li>
-            </ul>
-        </div>
-        <button class="btn-next visible" onclick="changePage('page3', 'page4')">Далее</button>
-    </div>
-
-    <div class="container" id="page4">
-        <div class="text-block">
-            <div style="font-weight: bold; margin-bottom: 25px; font-size: 1.4rem;">[target // network_infrastructure]</div>
-            <p style="margin-bottom: 20px;"><span style="color: #666666;">Направление:</span> Интеграция систем мониторинга, стресс-тестирование UNIX/Windows сред, симуляция векторов внутренних угроз.</p>
-            <p style="margin-bottom: 5px;"><span style="color: #666666;">Задачи исследования:</span></p>
-            <ul>
-                <li>Тестирование устойчивости шлюзов к аномальным всплескам трафика.</li>
-                <li>Анализ изоляции виртуальных сетей (VLAN) внутри коммерческих объектов.</li>
-                <li>Оценка эффективности систем обнаружения сетевых вторжений (IDS).</li>
-            </ul>
-        </div>
-        <button class="btn-next visible" onclick="triggerFinalPage()">Далее</button>
-    </div>
-
-    <div class="container" id="page5">
-        <div class="text-block" id="log-container">
-            <div style="font-weight: bold; margin-bottom: 15px;">[system_log // security_event]</div>
-        </div>
-        <div class="meta-note" id="final-status" style="text-align: center;">
-            [processing]
-        </div>
-    </div>
+    </main>
 
     <script>
-        const lines = [
-            "Приватность — это опасное заблуждение. В цифровой среде безопасность существует лишь до тех пор, пока ваша система никому не интересна.",
-            "Настоящий контроль незаметен. Пока вы читаете эти строки, в фоне уже работают механизмы, о существовании которых вы не догадываетесь.",
-            "Каждое действие оставляет след. Вопрос не в том, уязвимы ли вы. Вопрос лишь в том, сколько времени потребуется на полный сбор ваших данных."
+        const advices = [
+            "Твой мозг — самый дорогой актив. Инвестируй в знания, которые приносят доллары, а не просто тенге.",
+            "Сложный процент — восьмое чудо света. Начни откладывать сегодня, даже если это 1000 тенге.",
+            "Не инвестируй в то, чего не понимаешь. Твои знания — твоя лучшая страховка от потерь.",
+            "Сначала заплати себе. Откладывай минимум 10% от любого дохода до того, как начнешь тратить.",
+            "Решай проблемы людей. Чем большую проблему ты решаешь, тем больше тебе готовы платить.",
+            "Матовая пленка на iPhone — это стиль. Но матовый блеск в твоих делах — это дисциплина.",
+            "Твоё окружение — это твой будущий баланс на карте. Фильтруй общение.",
+            "Никогда не бери кредиты на вещи, которые не приносят тебе доход."
         ];
 
-        const logLines = [
-            "anomaly detected on port 443...",
-            "signature match: unauthorized scan attempt",
-            "activating incident response protocol...",
-            "isolating target host segment...",
-            "updating firewall state tables...",
-            "dropping packet transit privileges...",
-            "generating security alert report..."
-        ];
+        let currentAdviceIndex = 0;
+        const authScreen = document.getElementById('auth-screen');
+        const appScreen = document.getElementById('app-screen');
+        const adviceTitle = document.getElementById('advice-title');
+        const adviceText = document.getElementById('advice-text');
+        const adviceCard = document.getElementById('advice-card');
+        const layer = document.getElementById('transition-layer');
 
-        const container = document.getElementById('typing-container');
-        const nextBtn1 = document.getElementById('next-btn1');
-        let currentLine = 0;
-
-        function showNextLine() {
-            if (currentLine < lines.length) {
-                const p = document.createElement('p');
-                p.className = 'text-line';
-                p.textContent = lines[currentLine];
-                container.appendChild(p);
-                setTimeout(() => {
-                    p.classList.add('visible');
-                    currentLine++;
-                    setTimeout(showNextLine, 1500);
-                }, 100);
-            } else {
-                nextBtn1.classList.add('visible');
-            }
-        }
-
-        window.onload = () => { setTimeout(showNextLine, 500); };
-
-        function changePage(hideId, showId) {
-            document.getElementById(hideId).classList.remove('active');
-            document.getElementById(showId).classList.add('active');
-            window.scrollTo(0, 0); /* Сбрасываем скролл вверх при переходе */
-        }
-
-        function triggerFinalPage() {
-            changePage('page4', 'page5');
-            const p5 = document.getElementById('page5');
-            p5.classList.add('flicker-active');
-            
+        // Имитация авторизации и переход к контенту
+        window.addEventListener('load', () => {
             setTimeout(() => {
-                p5.classList.remove('flicker-active');
-                printLogs(0);
-            }, 1200);
+                // Плавное затухание экрана авторизации
+                authScreen.style.opacity = '0';
+                authScreen.style.filter = 'blur(10px)';
+                
+                // Активация перехода (симуляция загрузки)
+                setTimeout(() => {
+                    layer.classList.add('active');
+                    
+                    // Переключение экранов
+                    setTimeout(() => {
+                        authScreen.style.display = 'none';
+                        appScreen.classList.add('active');
+                        layer.classList.remove('active');
+                    }, 800); // Время анимации слоя
+                }, 500); // Время затухания текста
+
+            }, 2000); // Задержка экрана "Авторизация" (2 секунды)
+        });
+
+        // Функция обновления совета с анимацией карточки
+        function updateAdvice(newIndex) {
+            currentAdviceIndex = newIndex;
+            
+            // Анимация ухода карточки
+            adviceCard.style.transform = 'scale(0.95)';
+            adviceCard.style.opacity = '0';
+
+            setTimeout(() => {
+                adviceTitle.innerText = `Совет #${currentAdviceIndex + 1}`;
+                adviceText.innerText = advices[currentAdviceIndex];
+                
+                // Анимация появления карточки
+                adviceCard.style.transform = 'scale(1)';
+                adviceCard.style.opacity = '1';
+            }, 300); // Время скрытия карточки
         }
 
-        function printLogs(index) {
-            const logContainer = document.getElementById('log-container');
-            if (index < logLines.length) {
-                const div = document.createElement('div');
-                div.className = 'log-line';
-                div.textContent = `> ${logLines[index]}`;
-                logContainer.appendChild(div);
-                
-                setTimeout(() => {
-                    printLogs(index + 1);
-                }, 250);
-            } else {
-                const alertDiv = document.createElement('div');
-                alertDiv.className = 'alert-text';
-                alertDiv.innerHTML = 'КОНЕЦ СТРАНИЦ<br>[ СИСТЕМА ЗАБЛОКИРОВАНА ]';
-                logContainer.appendChild(alertDiv);
-                
-                document.getElementById('final-status').innerHTML = '<span style="color: #ff0000; font-weight: bold;">— Сессия Прервана —</span>';
-            }
-        }
+        // Кнопка "Вперед"
+        document.getElementById('next-btn').addEventListener('click', () => {
+            let nextIndex = (currentAdviceIndex + 1) % advices.length;
+            updateAdvice(nextIndex);
+        });
+
+        // Кнопка "Назад"
+        document.getElementById('prev-btn').addEventListener('click', () => {
+            let prevIndex = (currentAdviceIndex - 1 + advices.length) % advices.length;
+            updateAdvice(prevIndex);
+        });
+
     </script>
 </body>
 </html>
