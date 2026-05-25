@@ -5,221 +5,277 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>INDLENDD CLUB</title>
+    <title>INDLENDDcorp</title>
     <style>
         :root {
-            --bg: #000000;
+            --bg: #050505;
             --text: #ffffff;
-            --sub-text: #888888;
-            --card-bg: rgba(255, 255, 255, 0.04);
-            --accent: #ffffff; /* Белый акцент для элитарности */
-            --glass: rgba(255, 255, 255, 0.01);
-            --blur: 25px;
-            --transition-ui: cubic-bezier(0.23, 1, 0.32, 1); /* Дорогая кривая */
+            --sub-text: #7a7a7a;
+            --card-bg: rgba(20, 20, 20, 0.8);
+            --accent: #d4af37;
+            --glass: rgba(255, 255, 255, 0.02);
+            --blur: 30px;
+            --transition-ui: cubic-bezier(0.16, 1, 0.3, 1);
+            --red: #ff3b30;
+            --green: #34c759;
         }
 
         body {
             margin: 0; background: var(--bg); color: var(--text);
-            font-family: -apple-system, system-ui, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, system-ui, sans-serif;
             overflow: hidden; height: 100vh;
             display: flex; flex-direction: column;
             padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* --- Глобальная анимация затухания --- */
-        .fade-out { opacity: 0; filter: blur(10px); }
         .transition-layer {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg); z-index: 1000;
-            transition: opacity 0.8s var(--transition-ui), visibility 0.8s;
+            transition: opacity 1s var(--transition-ui), visibility 1s;
             visibility: hidden; opacity: 0;
+            display: flex; align-items: center; justify-content: center;
         }
         .transition-layer.active { visibility: visible; opacity: 1; }
+        .spinner { width: 40px; height: 40px; border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* --- Header: Логотип и Автор --- */
         header {
             position: fixed; top: env(safe-area-inset-top); left: 0; width: 100%;
             display: flex; align-items: center; justify-content: space-between;
             padding: 20px 25px; box-sizing: border-box; z-index: 500;
+            border-bottom: 0.5px solid rgba(255,255,255,0.05);
+            background: rgba(5, 5, 5, 0.9); backdrop-filter: blur(20px);
         }
 
-        .logo {
-            font-size: 16px; font-weight: 900; letter-spacing: 5px; text-transform: uppercase;
-            color: var(--text); position: relative;
-        }
-        .logo::after {
-            content: ''; position: absolute; bottom: -5px; left: 0; width: 20px; height: 1.5px;
-            background: var(--accent);
-        }
+        .logo { font-size: 14px; font-weight: 900; letter-spacing: 4px; color: var(--text); }
+        .logo span { color: var(--accent); }
+        .author { font-size: 9px; font-weight: 600; text-transform: uppercase; color: var(--sub-text); letter-spacing: 1px; }
+        .author a { color: var(--text); text-decoration: none; }
 
-        .author {
-            font-size: 10px; font-weight: 500; text-transform: uppercase;
-            color: var(--sub-text); letter-spacing: 2px;
-        }
-        .author a { color: inherit; text-decoration: none; border-bottom: 0.5px solid var(--sub-text); }
+        main { flex: 1; display: flex; flex-direction: column; padding: 80px 20px 20px 20px; overflow-y: auto; }
 
-        /* --- Main Content --- */
-        main {
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            padding: 0 25px;
-        }
-
-        /* --- Screen 1: Авторизация --- */
         #auth-screen {
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-            transition: opacity 0.5s var(--transition-ui), filter 0.5s var(--transition-ui);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100%; text-align: center; transition: opacity 0.5s var(--transition-ui);
         }
-        
-        #auth-screen h1 { font-size: 34px; font-weight: 800; margin: 0 0 10px; letter-spacing: -1px; }
-        #auth-screen p { color: var(--sub-text); font-size: 15px; margin-bottom: 30px; line-height: 1.4; }
+        #auth-screen h1 { font-size: 28px; font-weight: 800; margin: 0 0 10px; letter-spacing: 1px; }
+        #auth-screen p { color: var(--sub-text); font-size: 13px; line-height: 1.5; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* --- Screen 2: Главный Контент --- */
         #app-screen {
-            display: none; width: 100%; max-width: 400px;
-            opacity: 0; transform: translateY(20px);
-            transition: opacity 0.6s var(--transition-ui) 0.3s, transform 0.6s var(--transition-ui) 0.3s;
+            display: none; width: 100%; max-width: 500px; margin: 0 auto;
+            opacity: 0; transform: translateY(10px);
+            transition: opacity 0.8s var(--transition-ui) 0.2s, transform 0.8s var(--transition-ui) 0.2s;
         }
         #app-screen.active { display: block; opacity: 1; transform: translateY(0); }
 
-        .advice-card {
-            background: var(--card-bg); border-radius: 35px; padding: 40px;
-            border: 0.5px solid rgba(255, 255, 255, 0.08);
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; }
+        .tabs::-webkit-scrollbar { display: none; }
+        .tab {
+            padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px; white-space: nowrap;
+            background: transparent; color: var(--sub-text); border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        .tab.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+        .tab-premium { color: var(--accent); border-color: rgba(212, 175, 55, 0.3); }
+        .tab-premium.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+        .data-card {
+            background: var(--card-bg); border-radius: 24px; padding: 30px;
+            border: 0.5px solid rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur));
-            transition: transform 0.5s var(--transition-ui);
-            min-height: 200px; display: flex; flex-direction: column; justify-content: center;
+            transition: transform 0.4s var(--transition-ui), opacity 0.4s var(--transition-ui);
+            position: relative; overflow: hidden;
         }
+        .risk-indicator { position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent); transition: background 0.3s; }
+        .data-category { color: var(--sub-text); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+        .data-title { font-size: 22px; font-weight: 700; line-height: 1.3; margin-bottom: 15px; }
+        .data-text { font-size: 15px; font-weight: 400; line-height: 1.6; color: #b0b0b0; }
+
+        /* --- PREMIUM CARD --- */
+        #premium-card { display: none; text-align: center; }
+        .premium-icon { font-size: 40px; margin-bottom: 15px; }
+        .premium-title { color: var(--accent); font-size: 24px; font-weight: 800; margin-bottom: 10px; letter-spacing: 1px; }
+        .premium-list { text-align: left; margin: 25px 0; padding: 0 10px; color: #b0b0b0; font-size: 14px; line-height: 1.8; }
+        .premium-list li { margin-bottom: 10px; list-style: none; position: relative; padding-left: 20px; }
+        .premium-list li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); }
         
-        .advice-title {
-            color: var(--accent); font-size: 11px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px;
-        }
-
-        .advice-text {
-            font-size: 20px; font-weight: 600; line-height: 1.5;
-            color: var(--text); text-align: left;
-        }
-
-        /* --- Кнопки Навигации --- */
-        .controls {
-            display: flex; justify-content: center; gap: 15px; margin-top: 30px;
-        }
-
-        .btn-nav {
-            display: flex; align-items: center; justify-content: center;
-            width: 55px; height: 55px; border-radius: 50%;
-            background: var(--card-bg); border: 0.5px solid rgba(255, 255, 255, 0.08);
-            color: var(--accent); transition: background 0.3s, transform 0.2s;
+        .btn-buy {
+            display: inline-block; width: 100%; padding: 18px 0; border-radius: 16px;
+            background: var(--accent); color: #000; font-size: 14px; font-weight: 800;
+            text-transform: uppercase; text-decoration: none; letter-spacing: 1px;
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2); transition: all 0.2s;
             -webkit-tap-highlight-color: transparent;
         }
-        .btn-nav:active { background: rgba(255,255,255,0.1); transform: scale(0.95); }
-        .btn-navsvg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+        .btn-buy:active { transform: scale(0.95); box-shadow: 0 5px 10px rgba(212, 175, 55, 0.2); }
 
+        .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; padding: 0 10px; }
+        .counter { font-size: 12px; font-weight: 600; color: var(--sub-text); letter-spacing: 2px; }
+        .btn-nav {
+            display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 16px;
+            background: rgba(255,255,255,0.05); border: 0.5px solid rgba(255, 255, 255, 0.05);
+            color: var(--text); transition: all 0.2s;
+        }
+        .btn-nav:active { background: rgba(255,255,255,0.1); transform: scale(0.95); }
+        .btn-navsvg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; }
     </style>
 </head>
 <body>
 
-    <div class="transition-layer" id="transition-layer"></div>
+    <div class="transition-layer" id="transition-layer"><div class="spinner"></div></div>
 
     <header>
-        <div class="logo">INDLENDD</div>
-        <div class="author">Created @indlendd (<a href="https://t.me/indlendd" target="_blank">tg</a>)</div>
+        <div class="logo">INDLENDD<span>corp</span></div>
+        <div class="author">By <a href="https://t.me/indlendd" target="_blank">@indlendd</a></div>
     </header>
 
     <main>
         <div id="auth-screen">
-            <h1>PRIVATE INSIGHTS</h1>
-            <p>Добро пожаловать в клуб. Система выполняет<br>приватную инициализацию...</p>
+            <h1>SYSTEM INIT</h1>
+            <p>Установка защищенного соединения<br>с терминалом базы данных...</p>
         </div>
 
         <div id="app-screen">
-            <div class="advice-card" id="advice-card">
-                <div class="advice-title" id="advice-title">Совет #1</div>
-                <div class="advice-text" id="advice-text">Твой мозг — самый дорогой актив. Инвестируй в знания, которые приносят доллары, а не просто тенге.</div>
+            
+            <div class="tabs" id="category-tabs">
+                <div class="tab active" data-category="all">ВСЕ</div>
+                <div class="tab" data-category="база">БАЗА</div>
+                <div class="tab" data-category="риск">РИСК</div>
+                <div class="tab tab-premium" data-category="premium">PRIVATE 💎</div>
             </div>
 
-            <div class="controls">
+            <div class="data-card" id="data-card">
+                <div class="risk-indicator" id="risk-indicator"></div>
+                <div class="data-category" id="data-category">ИНИЦИАЛИЗАЦИЯ...</div>
+                <div class="data-title" id="data-title">Загрузка данных</div>
+                <div class="data-text" id="data-text">Пожалуйста, подождите.</div>
+            </div>
+
+            <div class="controls" id="controls">
                 <button class="btn-nav" id="prev-btn">
                     <svg class="btn-navsvg" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
                 </button>
+                <div class="counter" id="counter">01 / 00</div>
                 <button class="btn-nav" id="next-btn">
                     <svg class="btn-navsvg" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
                 </button>
             </div>
+
+            <div class="data-card" id="premium-card">
+                <div class="premium-icon">🔒</div>
+                <div class="premium-title">PRIVATE CLUB</div>
+                <div style="color: var(--sub-text); font-size: 12px; letter-spacing: 1px; text-transform: uppercase;">Доступ закрыт</div>
+                
+                <ul class="premium-list">
+                    <li>Секреты запуска E-commerce бренда</li>
+                    <li>Где найти стартовый капитал с нуля</li>
+                    <li>Арбитраж трафика: скрытые связки</li>
+                    <li>Психология масштабирования х10</li>
+                </ul>
+
+                <a href="https://t.me/indlendd" class="btn-buy" target="_blank">КУПИТЬ ДОСТУП — $20</a>
+            </div>
+
         </div>
     </main>
 
     <script>
-        const advices = [
-            "Твой мозг — самый дорогой актив. Инвестируй в знания, которые приносят доллары, а не просто тенге.",
-            "Сложный процент — восьмое чудо света. Начни откладывать сегодня, даже если это 1000 тенге.",
-            "Не инвестируй в то, чего не понимаешь. Твои знания — твоя лучшая страховка от потерь.",
-            "Сначала заплати себе. Откладывай минимум 10% от любого дохода до того, как начнешь тратить.",
-            "Решай проблемы людей. Чем большую проблему ты решаешь, тем больше тебе готовы платить.",
-            "Матовая пленка на iPhone — это стиль. Но матовый блеск в твоих делах — это дисциплина.",
-            "Твоё окружение — это твой будущий баланс на карте. Фильтруй общение.",
-            "Никогда не бери кредиты на вещи, которые не приносят тебе доход."
+        const database = [
+            { cat: "база", title: "Что такое Трейдинг?", text: "Трейдинг — это не казино. Это вероятность. Ты покупаешь актив дешевле и продаешь дороже. Твоя задача — не угадать будущее, а найти точку входа с минимальным риском.", risk: "var(--accent)" },
+            { cat: "риск", title: "Золотое правило 1%", text: "В одной сделке ты должен рисковать максимум 1-2% от своего общего депозита. Так ты сможешь пережить серию из 20 убытков подряд и остаться в игре.", risk: "var(--green)" },
+            { cat: "база", title: "С чего стартовать?", text: "1. Открой счет на Binance/Bybit. 2. Начни с демо-счета на TradingView. 3. Торгуй ТОЛЬКО на споте на те деньги, которые не боишься потерять.", risk: "var(--accent)" },
+            { cat: "риск", title: "Stop-Loss — твой бронежилет", text: "Входить в сделку без стоп-лосса — это самоубийство. Всегда, перед тем как нажать 'Купить', ты должен точно знать, где закроешь позицию в минус.", risk: "var(--green)" }
         ];
 
-        let currentAdviceIndex = 0;
+        let currentData = [...database];
+        let currentIndex = 0;
+        
         const authScreen = document.getElementById('auth-screen');
         const appScreen = document.getElementById('app-screen');
-        const adviceTitle = document.getElementById('advice-title');
-        const adviceText = document.getElementById('advice-text');
-        const adviceCard = document.getElementById('advice-card');
         const layer = document.getElementById('transition-layer');
+        
+        const dataCard = document.getElementById('data-card');
+        const premiumCard = document.getElementById('premium-card');
+        const controls = document.getElementById('controls');
 
-        // Имитация авторизации и переход к контенту
+        const indicator = document.getElementById('risk-indicator');
+        const catEl = document.getElementById('data-category');
+        const titleEl = document.getElementById('data-title');
+        const textEl = document.getElementById('data-text');
+        const counterEl = document.getElementById('counter');
+        const tabs = document.querySelectorAll('.tab');
+
         window.addEventListener('load', () => {
             setTimeout(() => {
-                // Плавное затухание экрана авторизации
                 authScreen.style.opacity = '0';
-                authScreen.style.filter = 'blur(10px)';
-                
-                // Активация перехода (симуляция загрузки)
                 setTimeout(() => {
                     layer.classList.add('active');
-                    
-                    // Переключение экранов
                     setTimeout(() => {
                         authScreen.style.display = 'none';
                         appScreen.classList.add('active');
+                        updateDisplay(0);
                         layer.classList.remove('active');
-                    }, 800); // Время анимации слоя
-                }, 500); // Время затухания текста
-
-            }, 2000); // Задержка экрана "Авторизация" (2 секунды)
+                    }, 1000);
+                }, 500);
+            }, 1500);
         });
 
-        // Функция обновления совета с анимацией карточки
-        function updateAdvice(newIndex) {
-            currentAdviceIndex = newIndex;
+        function updateDisplay(index) {
+            if (currentData.length === 0) return;
+            currentIndex = index;
             
-            // Анимация ухода карточки
-            adviceCard.style.transform = 'scale(0.95)';
-            adviceCard.style.opacity = '0';
+            dataCard.style.transform = 'translateY(15px) scale(0.98)';
+            dataCard.style.opacity = '0';
 
             setTimeout(() => {
-                adviceTitle.innerText = `Совет #${currentAdviceIndex + 1}`;
-                adviceText.innerText = advices[currentAdviceIndex];
+                const item = currentData[currentIndex];
+                indicator.style.background = item.risk;
+                catEl.innerText = `// ${item.cat}`;
+                titleEl.innerText = item.title;
+                textEl.innerText = item.text;
                 
-                // Анимация появления карточки
-                adviceCard.style.transform = 'scale(1)';
-                adviceCard.style.opacity = '1';
-            }, 300); // Время скрытия карточки
+                counterEl.innerText = `${String(currentIndex + 1).padStart(2, '0')} / ${String(currentData.length).padStart(2, '0')}`;
+                
+                dataCard.style.transform = 'translateY(0) scale(1)';
+                dataCard.style.opacity = '1';
+            }, 300);
         }
 
-        // Кнопка "Вперед"
         document.getElementById('next-btn').addEventListener('click', () => {
-            let nextIndex = (currentAdviceIndex + 1) % advices.length;
-            updateAdvice(nextIndex);
+            if (currentData.length > 0) updateDisplay((currentIndex + 1) % currentData.length);
         });
 
-        // Кнопка "Назад"
         document.getElementById('prev-btn').addEventListener('click', () => {
-            let prevIndex = (currentAdviceIndex - 1 + advices.length) % advices.length;
-            updateAdvice(prevIndex);
+            if (currentData.length > 0) updateDisplay((currentIndex - 1 + currentData.length) % currentData.length);
         });
 
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                tabs.forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+
+                const category = e.target.getAttribute('data-category');
+                
+                if (category === 'premium') {
+                    // Прячем обычный контент, показываем премиум
+                    dataCard.style.display = 'none';
+                    controls.style.display = 'none';
+                    premiumCard.style.display = 'block';
+                } else {
+                    // Возвращаем обычный контент
+                    premiumCard.style.display = 'none';
+                    dataCard.style.display = 'block';
+                    controls.style.display = 'flex';
+                    
+                    if (category === 'all') {
+                        currentData = [...database];
+                    } else {
+                        currentData = database.filter(item => item.cat === category);
+                    }
+                    updateDisplay(0);
+                }
+            });
+        });
     </script>
 </body>
 </html>
