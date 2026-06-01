@@ -2,308 +2,101 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>INDLENDDcorp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Super App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        /* Используем системные переменные Telegram для идеального дизайна */
         :root {
-            --bg: #050505;
-            --text: #ffffff;
-            --sub-text: #7a7a7a;
-            --card-bg: rgba(20, 20, 20, 0.8);
-            --accent: #d4af37;
-            --glass: rgba(255, 255, 255, 0.02);
-            --blur: 30px;
-            --transition-ui: cubic-bezier(0.16, 1, 0.3, 1);
-            --red: #ff3b30;
-            --green: #34c759;
-            --blue: #0a84ff;
+            --bg-color: var(--tg-theme-bg-color, #ffffff);
+            --text-color: var(--tg-theme-text-color, #222222);
+            --button-color: var(--tg-theme-button-color, #3390ec);
+            --button-text: var(--tg-theme-button-text-color, #ffffff);
+            --hint-color: var(--tg-theme-hint-color, #aaaaaa);
         }
 
         body {
-            margin: 0; background: var(--bg); color: var(--text);
-            font-family: -apple-system, system-ui, sans-serif;
-            min-height: 100vh;
-            padding-bottom: env(safe-area-inset-bottom);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80vh;
+            overflow: hidden;
         }
 
-        .transition-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); z-index: 1000;
-            transition: opacity 1s var(--transition-ui), visibility 1s;
-            visibility: hidden; opacity: 0;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .transition-layer.active { visibility: visible; opacity: 1; }
-        .spinner { width: 40px; height: 40px; border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        header {
-            position: fixed; top: 0; left: 0; width: 100%;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: calc(20px + env(safe-area-inset-top)) 25px 20px 25px; box-sizing: border-box; z-index: 500;
-            border-bottom: 0.5px solid rgba(255,255,255,0.05);
-            background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        .user-card {
+            background: rgba(128, 128, 128, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 300px;
         }
 
-        .logo { font-size: 14px; font-weight: 900; letter-spacing: 4px; color: var(--text); }
-        .logo span { color: var(--accent); }
-        .author { font-size: 9px; font-weight: 600; text-transform: uppercase; color: var(--sub-text); letter-spacing: 1px; }
-        .author a { color: var(--text); text-decoration: none; }
+        h1 { font-size: 24px; margin-bottom: 10px; }
+        p { color: var(--hint-color); font-size: 14px; }
 
-        main { display: flex; flex-direction: column; padding: 110px 20px 40px 20px; align-items: center; }
-
-        #auth-screen {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            height: 70vh; text-align: center; transition: opacity 0.5s var(--transition-ui);
+        .btn {
+            background-color: var(--button-color);
+            color: var(--button-text);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            transition: transform 0.1s;
         }
-        #auth-screen h1 { font-size: 28px; font-weight: 800; margin: 0 0 10px; letter-spacing: 1px; }
-        #auth-screen p { color: var(--sub-text); font-size: 13px; line-height: 1.5; text-transform: uppercase; letter-spacing: 2px; }
 
-        #app-screen {
-            display: none; width: 100%; max-width: 500px;
-            opacity: 0; transform: translateY(10px);
-            transition: opacity 0.8s var(--transition-ui) 0.2s, transform 0.8s var(--transition-ui) 0.2s;
-        }
-        #app-screen.active { display: block; opacity: 1; transform: translateY(0); }
-
-        .tabs { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; }
-        .tabs::-webkit-scrollbar { display: none; }
-        .tab {
-            padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 1px; white-space: nowrap;
-            background: transparent; color: var(--sub-text); border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.3s; -webkit-tap-highlight-color: transparent;
-        }
-        .tab.active { background: var(--text); color: var(--bg); border-color: var(--text); }
-        .tab-premium { color: var(--accent); border-color: rgba(212, 175, 55, 0.3); }
-        .tab-premium.active { background: var(--accent); color: #000; border-color: var(--accent); }
-
-        .data-card {
-            background: var(--card-bg); border-radius: 24px; padding: 30px;
-            border: 0.5px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur));
-            transition: transform 0.4s var(--transition-ui), opacity 0.4s var(--transition-ui);
-            position: relative; 
-        }
-        .risk-indicator { position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent); transition: background 0.3s; }
-        .data-category { color: var(--sub-text); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
-        .data-title { font-size: 22px; font-weight: 700; line-height: 1.3; margin-bottom: 15px; }
-        .data-text { font-size: 15px; font-weight: 400; line-height: 1.6; color: #d0d0d0; }
-
-        #premium-card { display: none; text-align: center; }
-        .premium-icon { font-size: 40px; margin-bottom: 15px; }
-        .premium-title { color: var(--accent); font-size: 24px; font-weight: 800; margin-bottom: 10px; letter-spacing: 1px; }
-        .premium-list { text-align: left; margin: 25px 0; padding: 0 10px; color: #b0b0b0; font-size: 15px; line-height: 1.8; }
-        .premium-list li { margin-bottom: 15px; list-style: none; position: relative; padding-left: 20px; }
-        .premium-list li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); }
-        
-        .btn-buy {
-            display: inline-block; width: 100%; padding: 18px 0; border-radius: 16px;
-            background: var(--accent); color: #000; font-size: 14px; font-weight: 800;
-            text-transform: uppercase; text-decoration: none; letter-spacing: 1px;
-            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2); transition: all 0.2s;
-            -webkit-tap-highlight-color: transparent; margin-top: 10px;
-        }
-        .btn-buy:active { transform: scale(0.95); box-shadow: 0 5px 10px rgba(212, 175, 55, 0.2); }
-
-        .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; padding: 0 10px; }
-        .counter { font-size: 12px; font-weight: 600; color: var(--sub-text); letter-spacing: 2px; }
-        .btn-nav {
-            display: flex; align-items: center; justify-content: center; width: 55px; height: 55px; border-radius: 16px;
-            background: rgba(255,255,255,0.05); border: 0.5px solid rgba(255, 255, 255, 0.05);
-            color: var(--text); transition: all 0.2s; -webkit-tap-highlight-color: transparent;
-        }
-        .btn-nav:active { background: rgba(255,255,255,0.1); transform: scale(0.95); }
-        .btn-navsvg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; }
+        .btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
 
-    <div class="transition-layer" id="transition-layer"><div class="spinner"></div></div>
+    <div class="user-card">
+        <h1 id="user-name">Привет!</h1>
+        <p>Добро пожаловать в моё мини-приложение.</p>
+    </div>
 
-    <header>
-        <div class="logo">INDLENDD<span>corp</span></div>
-        <div class="author">By <a href="https://t.me/indlendd" target="_blank">@indlendd</a></div>
-    </header>
+    <button class="btn" onclick="sendData()">Отправить данные боту</button>
+    <button class="btn" style="margin-top: 10px; background: #e53935;" onclick="triggerVibrate()">Вибрировать</button>
 
-    <main>
-        <div id="auth-screen">
-            <h1>SYSTEM INIT</h1>
-            <p>Установка защищенного соединения<br>с терминалом базы данных...</p>
-        </div>
+    <script>
+        const tg = window.Telegram.WebApp;
 
-        <div id="app-screen">
-            
-            <div class="tabs" id="category-tabs">
-                <div class="tab active" data-category="all">ВСЕ</div>
-                <div class="tab" data-category="база">БАЗА</div>
-                <div class="tab" data-category="теханализ">ТЕХАНАЛИЗ</div>
-                <div class="tab" data-category="психология">ПСИХОЛОГИЯ</div>
-                <div class="tab" data-category="риск">РИСК</div>
-                <div class="tab tab-premium" data-category="premium">PRIVATE 💎</div>
-            </div>
+        // Сообщаем Telegram, что приложение готово
+        tg.ready();
+        tg.expand(); // Разворачиваем на максимум
 
-            <div class="data-card" id="data-card">
-                <div class="risk-indicator" id="risk-indicator"></div>
-                <div class="data-category" id="data-category">ИНИЦИАЛИЗАЦИЯ...</div>
-                <div class="data-title" id="data-title">Загрузка данных</div>
-                <div class="data-text" id="data-text">Пожалуйста, подождите.</div>
-            </div>
-
-            <div class="controls" id="controls">
-                <button class="btn-nav" id="prev-btn">
-                    <svg class="btn-navsvg" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
-                </button>
-                <div class="counter" id="counter">01 / 00</div>
-                <button class="btn-nav" id="next-btn">
-                    <svg class="btn-navsvg" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
-                </button>
-            </div>
-
-            <div class="data-card" id="premium-card">
-                <div class="premium-icon">🔒</div>
-                <div class="premium-title">PRIVATE CLUB</div>
-                <div style="color: var(--sub-text); font-size: 12px; letter-spacing: 1px; text-transform: uppercase;">Доступ закрыт</div>
-                
-                <ul class="premium-list">
-                    <li>Анонимный E-commerce: скрытые схемы дропшиппинга</li>
-                    <li>Откуда брать трафик и лидов (Мои связки)</li>
-                    <li>Где найти стартовый капитал с нуля</li>
-                    <li>Как масштабировать любой бизнес и сделать x10</li>
-                </ul>
-
-                <a href="https://t.me/indlendd" class="btn-buy" target="_blank">КУПИТЬ ДОСТУП — $20</a>
-            </div>
-
-        </div>
-    </main>
-        <script>
-        const database = [
-            // --- БАЗА ---
-            { cat: "база", title: "Что вообще такое Трейдинг?", text: "Трейдинг — это заработок на разнице цен. Купить дешевле, продать дороже (Лонг). Или продать дорого, откупить дешевле (Шорт). Это не казино. Это математика, где ты ищешь ситуации, в которых вероятность движения цены в твою сторону выше.", risk: "var(--accent)" },
-            { cat: "база", title: "Спот vs Фьючерсы", text: "Спот — реальная покупка монеты на кошелек. Фьючерсы (деривативы) — ставки на цену. На фьючерсах можно брать кредитное плечо и шортить, но именно там новички теряют 100% депозита из-за ликвидаций.", risk: "var(--accent)" },
-            { cat: "база", title: "Маркетмейкер (Кит)", text: "Крупные фонды и банки, обладающие миллиардами долларов. Они создают ликвидность на рынке. Твоя задача как трейдера — не пытаться бороться с ними, а научиться видеть их следы на графике и двигаться вместе с ними.", risk: "var(--accent)" },
-            { cat: "база", title: "Доминация Биткоина (BTC.D)", text: "Процент капитала всего крипторынка, который находится в Биткоине. Если доминация растет, BTC высасывает ликвидность из альткоинов (они падают). Если падает — ликвидность перетекает в альты.", risk: "var(--accent)" },
-            { cat: "база", title: "Что такое Альтсезон?", text: "Момент эйфории на рынке, когда Биткоин уходит во флэт (боковик), а инвесторы переливают прибыль в мелкие монеты. Именно в этот период альткоины стреляют на x10-x50.", risk: "var(--accent)" },
-            { cat: "база", title: "Токеномика (Анлоки)", text: "Прежде чем покупать альткоин в долгосрок, изучи его анлоки. Если в следующем месяце разработчики разблокируют 20% всех монет проекта и продадут их в рынок, цена рухнет, и никакой теханализ тебя не спасет.", risk: "var(--red)" },
-
-            // --- ТЕХАНАЛИЗ ---
-            { cat: "теханализ", title: "Японские свечи", text: "Свеча показывает движение цены за выбранное время. Длинные 'хвосты' (тени) снизу говорят о том, что покупатели агрессивно откупили падение цены. Это первый сигнал к развороту.", risk: "var(--blue)" },
-            { cat: "теханализ", title: "Ордер Блок (Order Block)", text: "Свеча, в которой Кит влил огромный объем денег, чтобы развернуть тренд. В этом месте остаются 'лимитные ордера'. Когда цена возвращается к Ордер Блоку, происходит реакция — это идеальная точка для входа.", risk: "var(--blue)" },
-            { cat: "теханализ", title: "FVG (Имбаланс)", text: "Fair Value Gap. Пустота на графике, оставленная мощным импульсным движением, где покупатели и продавцы не успели 'договориться' о цене. Рынок работает как магнит и всегда возвращается, чтобы перекрыть этот FVG.", risk: "var(--blue)" },
-            { cat: "теханализ", title: "Сбор Ликвидности (Sweep)", text: "Когда цена чуть-чуть пробивает важный уровень, собирает там стоп-лоссы толпы и резко разворачивается обратно. Это ложный пробой, который Киты используют для набора своей позиции.", risk: "var(--blue)" },
-            { cat: "теханализ", title: "Торговые объемы (Volume)", text: "Любое движение цены должно подтверждаться объемами. Если цена растет, а объемы покупок падают — это ложный рост, скоро будет падение. Крупного игрока всегда видно по объемам внизу графика.", risk: "var(--blue)" },
-            { cat: "теханализ", title: "Скользящие средние (EMA)", text: "Линии на графике, показывающие среднюю цену. EMA 200 на дневном графике — это компас рынка. Если цена выше EMA 200, мы в глобальном бычьем рынке (ищем только лонги). Если ниже — медвежка.", risk: "var(--blue)" },
-            { cat: "теханализ", title: "BOS и CHoCH", text: "BOS (Break of Structure) — пробой структуры по тренду. Подтверждает, что тренд продолжается. CHoCH (Change of Character) — смена характера рынка, сигнализирующая о развороте тренда.", risk: "var(--blue)" },
-
-            // --- РИСК-МЕНЕДЖМЕНТ ---
-            { cat: "риск", title: "Золотое правило 1%", text: "Твой Стоп-Лосс не должен превышать 1-2% от всего капитала. Если у тебя $1000, ты рискуешь максимум $10 в сделке. Даже 10 минусов подряд заберут лишь 10% депо. Ты останешься в игре.", risk: "var(--green)" },
-            { cat: "риск", title: "Risk / Reward (R:R)", text: "Отношение риска к прибыли. Если ты рискуешь $10, чтобы заработать $30 — твой R:R равен 1:3. При таком соотношении тебе достаточно выигрывать всего 3 сделки из 10, чтобы быть в плюсе на дистанции.", risk: "var(--green)" },
-            { cat: "риск", title: "Усреднение (Доливка в минус)", text: "Самая смертельная ошибка. Когда цена идет против тебя, а ты докупаешь еще, надеясь, что 'сейчас развернется'. Это прямой путь к ликвидации. Убыточную сделку нужно резать сразу по Стопу.", risk: "var(--red)" },
-            { cat: "риск", title: "Перевод в БУ (Безубыток)", text: "Перенос твоего Стоп-Лосса на цену входа, когда сделка уже идет в хороший плюс. Это делает сделку бесплатной. Главное правило: не давай прибыльной сделке превратиться в убыточную.", risk: "var(--green)" },
-            { cat: "риск", title: "Частичная фиксация", text: "Никогда не жадничай. Цена прошла полпути до твоего Тейк-Профита? Закрой 50% сделки, а остаток оставь расти. Так ты уже зафиксировал прибыль на свой счет.", risk: "var(--green)" },
-            { cat: "риск", title: "Кредитное плечо — это иллюзия", text: "Плечо не делает тебя богаче, оно лишь позволяет открыть сделку с меньшим обеспечением. Риск контролируется не плечом, а размером твоего Стоп-Лосса.", risk: "var(--red)" },
-            { cat: "риск", title: "Дневной лимит потерь", text: "Установи жесткое правило: 'Если я ловлю 3 Стоп-Лосса за день, я закрываю терминал до завтра'. Это защитит тебя от тильта и потери всего депозита на эмоциях.", risk: "var(--green)" },
-
-            // --- ПСИХОЛОГИЯ ---
-            { cat: "психология", title: "Синдром FOMO", text: "Страх упущенной выгоды. Ты залетаешь в улетевшую ракету (огромную зеленую свечу), боясь не успеть. В 90% случаев ты покупаешь на самом пике перед жестким откатом.", risk: "var(--green)" },
-            { cat: "психология", title: "Овертрейдинг", text: "Желание постоянно находиться в сделке. Рынок не дает хороших сетапов каждый час. Иногда лучшая позиция — это сидеть на заборе с долларами (USDT) и просто наблюдать.", risk: "var(--red)" },
-            { cat: "психология", title: "Месть рынку", text: "Ты получил стоп-лосс. Злишься и тут же открываешь сделку в обратную сторону удвоенным объемом, чтобы 'отбить минус'. Это гарантия слива депозита. Ошибся? Отойди от экрана.", risk: "var(--red)" },
-            { cat: "психология", title: "Дневник трейдера", text: "Если ты не записываешь свои сделки (почему зашел, какие эмоции испытывал, где вышел), ты не трейдер, а гемблер (игрок). Без дневника невозможно улучшить стратегию.", risk: "var(--green)" },
-            { cat: "психология", title: "Аналитический паралич", text: "Ты накинул на график 15 индикаторов, RSI, MACD и уровни. Один индикатор говорит лонг, другой — шорт. В итоге ты в ступоре. График должен быть чистым. Price Action — основа всего.", risk: "var(--green)" }
-        ];
-
-        let currentData = [...database];
-        let currentIndex = 0;
-        
-        const authScreen = document.getElementById('auth-screen');
-        const appScreen = document.getElementById('app-screen');
-        const layer = document.getElementById('transition-layer');
-        
-        const dataCard = document.getElementById('data-card');
-        const premiumCard = document.getElementById('premium-card');
-        const controls = document.getElementById('controls');
-
-        const indicator = document.getElementById('risk-indicator');
-        const catEl = document.getElementById('data-category');
-        const titleEl = document.getElementById('data-title');
-        const textEl = document.getElementById('data-text');
-        const counterEl = document.getElementById('counter');
-        const tabs = document.querySelectorAll('.tab');
-
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                authScreen.style.opacity = '0';
-                setTimeout(() => {
-                    layer.classList.add('active');
-                    setTimeout(() => {
-                        authScreen.style.display = 'none';
-                        appScreen.classList.add('active');
-                        updateDisplay(0);
-                        layer.classList.remove('active');
-                    }, 1000);
-                }, 500);
-            }, 1500);
-        });
-
-        function updateDisplay(index) {
-            if (currentData.length === 0) return;
-            currentIndex = index;
-            
-            dataCard.style.transform = 'translateY(15px) scale(0.98)';
-            dataCard.style.opacity = '0';
-
-            setTimeout(() => {
-                const item = currentData[currentIndex];
-                indicator.style.background = item.risk;
-                catEl.innerText = `// ${item.cat}`;
-                titleEl.innerText = item.title;
-                textEl.innerText = item.text;
-                
-                counterEl.innerText = `${String(currentIndex + 1).padStart(2, '0')} / ${String(currentData.length).padStart(2, '0')}`;
-                
-                dataCard.style.transform = 'translateY(0) scale(1)';
-                dataCard.style.opacity = '1';
-                
-                // Скролл текста наверх при смене карточки
-                textEl.scrollTop = 0;
-            }, 300);
+        // Выводим имя пользователя из Telegram
+        const userName = document.getElementById('user-name');
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            userName.innerText = `Привет, ${tg.initDataUnsafe.user.first_name}!`;
         }
 
-        document.getElementById('next-btn').addEventListener('click', () => {
-            if (currentData.length > 0) updateDisplay((currentIndex + 1) % currentData.length);
-        });
+        // Функция: Вибрация (Haptic Feedback)
+        function triggerVibrate() {
+            tg.HapticFeedback.notificationOccurred('success');
+        }
 
-        document.getElementById('prev-btn').addEventListener('click', () => {
-            if (currentData.length > 0) updateDisplay((currentIndex - 1 + currentData.length) % currentData.length);
-        });
+        // Функция: Отправка данных боту и закрытие
+        function sendData() {
+            const data = { message: "Пользователь нажал кнопку!" };
+            tg.sendData(JSON.stringify(data)); 
+            // После этой команды приложение закроется, а бот получит сообщение
+        }
 
-        tabs.forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                tabs.forEach(t => t.classList.remove('active'));
-                e.target.classList.add('active');
-
-                const category = e.target.getAttribute('data-category');
-                
-                if (category === 'premium') {
-                    dataCard.style.display = 'none';
-                    controls.style.display = 'none';
-                    premiumCard.style.display = 'block';
-                } else {
-                    premiumCard.style.display = 'none';
-                    dataCard.style.display = 'block';
-                    controls.style.display = 'flex';
-                    
-                    if (category === 'all') {
-                        currentData = [...database];
-                    } else {
-                        currentData = database.filter(item => item.cat === category);
-                    }
-                    updateDisplay(0);
-                }
-            });
+        // Настройка главной кнопки (MainButton) внизу экрана
+        tg.MainButton.text = "ЗАКРЫТЬ ПРИЛОЖЕНИЕ";
+        tg.MainButton.show();
+        tg.MainButton.onClick(() => {
+            tg.close();
         });
     </script>
 </body>
