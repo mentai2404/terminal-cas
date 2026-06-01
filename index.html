@@ -7,11 +7,11 @@
     <!-- Подключаем скрипт Telegram Web App -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* Люксовая темная палитра с золотыми акцентами */
+        /* Премиальная матовая палитра */
         :root {
             --bg-dark: #0d0d0d;
             --card-bg: #141414;
-            --border-gold: #c5a059;
+            --accent-gold: #c5a059;
             --text-main: #ffffff;
             --text-gray: #8a8a8a;
         }
@@ -21,147 +21,151 @@
             background-color: var(--bg-dark);
             color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
+            justify-content: center;
+            min-height: 90vh;
             box-sizing: border-box;
             -webkit-user-select: none;
             user-select: none;
         }
 
-        /* Шапка бренда */
-        .header {
+        /* Контейнер бренда */
+        .brand-container {
             text-align: center;
-            margin-bottom: 30px;
-            margin-top: 10px;
+            margin-bottom: 40px;
         }
 
         .brand-title {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 700;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             text-transform: uppercase;
             margin: 0;
-            background: linear-gradient(135deg, #ffffff 50%, #c5a059 100%);
+            background: linear-gradient(135deg, #ffffff 40%, var(--accent-gold) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .brand-subtitle {
             color: var(--text-gray);
-            font-size: 12px;
-            letter-spacing: 3px;
+            font-size: 11px;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            margin-top: 5px;
+            margin-top: 8px;
         }
 
-        /* Карточки разделов */
-        .card {
+        /* Блок с информацией */
+        .info-block {
             background-color: var(--card-bg);
-            border: 1px solid rgba(197, 160, 89, 0.2);
-            border-radius: 12px;
-            padding: 20px;
+            border: 1px solid rgba(197, 160, 89, 0.15);
+            border-radius: 16px;
+            padding: 24px;
             width: 100%;
             max-width: 340px;
-            margin-bottom: 16px;
             box-sizing: border-box;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            transition: transform 0.2s, border-color 0.2s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
         }
 
-        .card:active {
-            transform: scale(0.98);
-            border-color: var(--border-gold);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .card-title {
-            font-size: 16px;
+        .greeting {
+            font-size: 18px;
             font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        .about-text {
+            color: var(--text-gray);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            text-align: justify;
+        }
+
+        /* Статус разработки */
+        .status-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(197, 160, 89, 0.08);
+            border: 1px dashed rgba(197, 160, 89, 0.3);
+            padding: 12px 16px;
+            border-radius: 10px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-gold);
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.7);
+            animation: pulse 1.6s infinite;
+        }
+
+        .status-text {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--accent-gold);
             letter-spacing: 0.5px;
             margin: 0;
         }
 
-        .badge {
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            padding: 4px 8px;
-            border-radius: 4px;
-            letter-spacing: 1px;
-        }
-
-        .badge-free {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--text-main);
-        }
-
-        .badge-vip {
-            background-color: rgba(197, 160, 89, 0.15);
-            color: var(--border-gold);
-            border: 1px solid rgba(197, 160, 89, 0.3);
-        }
-
-        .card-desc {
-            color: var(--text-gray);
-            font-size: 13px;
-            line-height: 1.5;
-            margin: 0;
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 6px rgba(197, 160, 89, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(197, 160, 89, 0);
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Шапка приложения -->
-    <div class="header">
+    <!-- Логотип и Бренд -->
+    <div class="brand-container">
         <h1 class="brand-title">INDLENDDcorp</h1>
         <div class="brand-subtitle">Financial Terminal</div>
     </div>
 
-    <!-- Модуль 1 -->
-    <div class="card" onclick="openModule('edu')">
-        <div class="card-header">
-            <h2 class="card-title">Базовое обучение</h2>
-            <span class="badge badge-free">Free</span>
-        </div>
-        <p class="card-desc">Фундамент заработка: основы рынков, спот, фьючерсы и жесткий риск-менеджмент.</p>
-    </div>
+    <!-- Информационный блок -->
+    <div class="info-block">
+        <h2 class="greeting" id="user-greeting">Приветствуем.</h2>
+        
+        <p class="about-text">
+            <b>INDLENDDcorp</b> — это закрытая экосистема, созданная для тех, кто выбирает хладнокровный подход к финансам. Мы строим профессиональную платформу для обучения системному заработку, анализу рынков и контролю рисков. Никаких эмоций. Только сухая математика и рабочие торговые стратегии.
+        </p>
 
-    <!-- Модуль 2 -->
-    <div class="card" onclick="openModule('psy')">
-        <div class="card-header">
-            <h2 class="card-title">Хладнокровие</h2>
-            <span class="badge badge-free">Free</span>
+        <!-- Пульсирующий статус разработки -->
+        <div class="status-container">
+            <div class="pulse-dot"></div>
+            <p class="status-text">Терминал на стадии разработки. Скоро здесь появится полный функционал.</p>
         </div>
-        <p class="card-desc">Психология контроля эмоций. Как отключить внутреннее казино и убрать FOMO.</p>
-    </div>
-
-    <!-- Модуль 3 (VIP) -->
-    <div class="card" onclick="openModule('vip')">
-        <div class="card-header">
-            <h2 class="card-title">INDLENDD VIP</h2>
-            <span class="badge badge-vip">Premium</span>
-        </div>
-        <p class="card-desc">Закрытый клуб: ежедневная аналитика, готовые торговые сетапы и сильное окружение.</p>
     </div>
 
     <script>
         // Инициализация Telegram Web App
         const tg = window.Telegram.WebApp;
         tg.ready();
-        tg.expand(); // Разворачиваем на весь экран
+        tg.expand();
 
-        // Настраиваем нижнюю главную кнопку Telegram под люкс
+        // Подтягиваем имя пользователя, если оно доступно
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            document.getElementById('user-greeting').innerText = `Приветствуем, ${tg.initDataUnsafe.user.first_name}.`;
+        }
+
+        // Настройка главной нижней кнопки под общий люкс-стиль
         tg.MainButton.setParams({
-            text: "ЗАКРЫТЬ ТЕРМИНАЛ",
+            text: "ЗАКРЫТЬ",
             color: "#141414",
             text_color: "#c5a059"
         });
@@ -170,32 +174,6 @@
         tg.MainButton.onClick(() => {
             tg.close();
         });
-
-        // Функция обработки нажатий на карточки
-        function openModule(type) {
-            // Легкая вибрация при клике (Haptic Feedback)
-            tg.HapticFeedback.impactOccurred('medium');
-            
-            if (type === 'edu') {
-                tg.showAlert("Модуль 'Базовое обучение' загружается. Готовься к жесткой теории без воды.");
-            } else if (type === 'psy') {
-                tg.showAlert("Раздел 'Хладнокровие'. Здесь мы будем учиться выжигать эмоции и включать холодный расчет.");
-            } else if (type === 'vip') {
-                tg.showPopup({
-                    title: 'INDLENDD VIP',
-                    message: 'Доступ к закрытой аналитике и премиум-сетапам. Готов перейти на новый уровень?',
-                    buttons: [
-                        {id: 'link', type: 'default', text: 'Узнать подробнее'},
-                        {id: 'cancel', type: 'cancel', text: 'Назад'}
-                    ]
-                }, (buttonId) => {
-                    if (buttonId === 'link') {
-                        // Тут можно перенаправить или выдать инфу
-                        tg.showAlert("Свяжись с администратором для получения инвайта.");
-                    }
-                });
-            }
-        }
     </script>
 </body>
 </html>
